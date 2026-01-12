@@ -1,0 +1,135 @@
+{% extends 'blog/write/base_write.html' %}
+
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %} - Writing Interface{% endblock %}
+
+{% block content %}
+<div class="editor-container">
+    <div class="editor-layout">
+        <!-- Left Sidebar: Previous Posts -->
+        <aside class="editor-sidebar left">
+            <div class="sidebar-search">
+                <input type="text" id="post-search" placeholder="Search posts...">
+            </div>
+            <div class="sidebar-posts" id="posts-list">
+                {% for prev_post in all_posts %}
+                <div class="sidebar-post-item" data-post-id="{{ prev_post.id }}">
+                    <h4>{{ prev_post.title|default:"Untitled" }}</h4>
+                    <p class="post-meta-small">{{ prev_post.book.title }}</p>
+                    <p class="post-excerpt">{{ prev_post.commentary|truncatewords:15 }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </aside>
+        
+        <!-- Center: Main Editor -->
+        <main class="editor-main">
+            <div class="editor-header">
+                <h2>{% if post %}Edit Post{% else %}New Post{% endif %}</h2>
+                <div class="editor-actions">
+                    <span id="save-indicator" class="save-indicator"></span>
+                    {% if post %}
+                    <a href="{% url 'post_preview' post.id %}" target="_blank" class="btn btn-secondary">Preview</a>
+                    {% endif %}
+                    <button type="submit" form="post-form" class="btn btn-primary">Save Draft</button>
+                    {% if post and not post.is_published %}
+                    <form method="post" action="{% url 'post_publish' post.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-success">Publish</button>
+                    </form>
+                    {% elif post and post.is_published %}
+                    <form method="post" action="{% url 'post_unpublish' post.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-secondary">Unpublish</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <form method="post" id="post-form" class="post-form">
+                {% csrf_token %}
+                
+                <div class="form-section">
+                    <div class="form-row">
+                        <div class="form-group full-width">
+                            <label for="id_title">Title</label>
+                            {{ form.title }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="id_publish_date">Date</label>
+                            {{ form.publish_date }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_author">Author</label>
+                            {{ form.author }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_book">Book/Source</label>
+                            {{ form.book }}
+                        </div>
+                        <div class="form-group">
+                            <label for="id_series_order">Series Order</label>
+                            {{ form.series_order }}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h3>Worth Stealing (10 Points)</h3>
+                    <div id="points-container">
+                        {% for point in points %}
+                        <div class="point-editor" data-point-index="{{ forloop.counter0 }}">
+                            <div class="point-header">
+                                <span class="point-number-badge">{{ forloop.counter }}</span>
+                                <button type="button" class="btn-remove-point" onclick="removePoint({{ forloop.counter0 }})">Remove</button>
+                            </div>
+                            <input type="text" 
+                                   class="point-title-input" 
+                                   placeholder="Point title"
+                                   value="{{ point.title }}"
+                                   data-point-field="title">
+                            <textarea class="point-text-input" 
+                                      placeholder="Point description"
+                                      rows="3"
+                                      data-point-field="text">{{ point.text }}</textarea>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    <button type="button" id="add-point-btn" class="btn btn-secondary">Add Point</button>
+                </div>
+                
+                <div class="form-section">
+                    <h3>My Commentary</h3>
+                    {{ form.commentary }}
+                    <small>Markdown supported</small>
+                </div>
+                
+                <input type="hidden" name="points" id="points-json" value="">
+            </form>
+        </main>
+        
+        <!-- Right Sidebar: Reference Pane -->
+        <aside class="editor-sidebar right" id="reference-pane" style="display:none;">
+            <div class="reference-header">
+                <h3>Reference</h3>
+                <button type="button" id="close-reference" class="btn-close">×</button>
+            </div>
+            <div class="reference-content" id="reference-content">
+                <p>Select a post from the left sidebar to view it here.</p>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script>
+    window.postId = {% if post %}{{ post.id }}{% else %}null{% endif %};
+    {% if post %}
+    window.autosaveUrl = "{% url 'autosave' post.id %}";
+    {% else %}
+    window.autosaveUrl = "{% url 'autosave' %}";
+    {% endif %}
+</script>
+{% endblock %}
+

@@ -1,0 +1,23 @@
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    # Public URLs
+    path('', views.home, name='home'),
+    path('archive/', views.archive, name='archive'),
+    path('series/<slug:book_slug>/', views.series_view, name='series'),
+    path('post/<slug:slug>/', views.post_detail, name='post_detail'),
+    path('subscribe/', views.subscribe, name='subscribe'),
+    
+    # Writing interface URLs
+    path('write/', views.write_dashboard, name='write_dashboard'),
+    path('write/login/', views.write_login, name='write_login'),
+    path('write/post/new/', views.post_editor, {'post_id': None}, name='post_editor_new'),
+    path('write/post/<int:post_id>/', views.post_editor, name='post_editor'),
+    path('write/post/<int:post_id>/preview/', views.post_preview, name='post_preview'),
+    path('write/post/<int:post_id>/publish/', views.post_publish, name='post_publish'),
+    path('write/post/<int:post_id>/unpublish/', views.post_unpublish, name='post_unpublish'),
+    path('write/autosave/', views.autosave, name='autosave'),
+    path('write/autosave/<int:post_id>/', views.autosave, name='autosave'),
+]
+

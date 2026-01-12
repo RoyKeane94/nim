@@ -1,0 +1,63 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ post.title }} - Notes in the Margin{% endblock %}
+
+{% block content %}
+<div class="container post-container">
+    <nav class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="separator">/</span>
+        <a href="{% url 'series' post.book.slug %}">{{ post.book.title }}</a>
+        {% if post.series_order %}
+        <span class="separator">/</span>
+        <span>Chapter {{ post.series_order }}</span>
+        {% endif %}
+    </nav>
+    
+    <article class="post-article">
+        <header class="article-header">
+            <div class="article-date">{{ post.publish_date|date:"d M Y"|upper }}</div>
+            <h1 class="article-title">{{ post.title }}</h1>
+            <p class="article-source">Inspired by {{ post.author.name }} × {{ post.book.title }}</p>
+        </header>
+        
+        <section class="worth-stealing">
+            <h2>Worth Stealing</h2>
+            <div class="points-card">
+                {% for point in post.points %}
+                {% if point.title or point.text %}
+                <div class="point-item">
+                    <div class="point-number">{{ forloop.counter }}</div>
+                    <div class="point-content">
+                        {% if point.title %}
+                        <h3 class="point-title">{{ point.title }}</h3>
+                        {% endif %}
+                        {% if point.text %}
+                        <p class="point-text">{{ point.text }}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </section>
+        
+        <section class="commentary">
+            <div class="commentary-label">MY COMMENTARY</div>
+            <div class="commentary-content">
+                {{ commentary_html|safe }}
+            </div>
+        </section>
+    </article>
+    
+    <nav class="post-navigation">
+        {% if prev_post %}
+        <a href="{% url 'post_detail' prev_post.slug %}" class="nav-link prev">← Previous Post</a>
+        {% endif %}
+        {% if next_post %}
+        <a href="{% url 'post_detail' next_post.slug %}" class="nav-link next">Next Post →</a>
+        {% endif %}
+    </nav>
+</div>
+{% endblock %}
+

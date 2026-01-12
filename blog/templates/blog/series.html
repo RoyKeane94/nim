@@ -1,0 +1,51 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}{{ book.title }} - Notes in the Margin{% endblock %}
+
+{% block content %}
+<div class="container series-container">
+    <div class="series-header">
+        <div class="bookmark-ribbon"></div>
+        <h1 class="book-title">{{ book.title }}</h1>
+        <p class="book-author">by {{ book.author.name }}</p>
+        <p class="book-description">{{ book.description }}</p>
+        
+        <div class="series-stats">
+            <span class="stat">{{ book.get_chapters_count }} chapters covered</span>
+            <span class="stat-separator">·</span>
+            <span class="stat">{{ book.get_status_display }}</span>
+        </div>
+    </div>
+    
+    <div class="chapters-list">
+        {% for post in posts %}
+        <div class="chapter-item">
+            <div class="chapter-number">{{ post.series_order|default:forloop.counter }}</div>
+            <div class="chapter-content">
+                <div class="chapter-meta">
+                    <span class="chapter-date">{{ post.publish_date|date:"d M Y"|upper }}</span>
+                </div>
+                <h3 class="chapter-title">
+                    <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+                </h3>
+                {% if post.commentary %}
+                <p class="chapter-excerpt">{{ post.commentary|truncatewords:30 }}</p>
+                {% endif %}
+            </div>
+        </div>
+        {% empty %}
+        <p class="empty-state">No chapters published yet.</p>
+        {% endfor %}
+    </div>
+    
+    <div class="series-navigation">
+        {% if prev_series %}
+        <a href="{% url 'series' prev_series.slug %}" class="nav-link prev">← Previous Series</a>
+        {% endif %}
+        {% if next_series %}
+        <a href="{% url 'series' next_series.slug %}" class="nav-link next">Next Series →</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+

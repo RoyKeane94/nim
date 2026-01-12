@@ -1,0 +1,61 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Archive - Notes in the Margin{% endblock %}
+
+{% block content %}
+<div class="container archive-container">
+    <div class="archive-tabs">
+        <a href="?tab=recent" class="tab {% if active_tab == 'recent' %}active{% endif %}">Recent</a>
+        <a href="?tab=archive" class="tab {% if active_tab == 'archive' %}active{% endif %}">Archive</a>
+        <a href="?tab=authors" class="tab {% if active_tab == 'authors' %}active{% endif %}">Authors</a>
+    </div>
+    
+    <div class="filters-section">
+        <div class="filter-group">
+            <h3>Filter by Author</h3>
+            <div class="filter-pills">
+                <a href="?" class="pill {% if not active_author %}active{% endif %}">All</a>
+                {% for author in authors %}
+                <a href="?author={{ author.slug }}{% if active_book %}&book={{ active_book }}{% endif %}" 
+                   class="pill {% if active_author == author.slug %}active{% endif %}">
+                    {{ author.name }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <div class="filter-group">
+            <h3>Filter by Book/Source</h3>
+            <div class="filter-pills">
+                <a href="?" class="pill {% if not active_book %}active{% endif %}">All</a>
+                {% for book in books %}
+                <a href="?book={{ book.slug }}{% if active_author %}&author={{ active_author }}{% endif %}" 
+                   class="pill {% if active_book == book.slug %}active{% endif %}">
+                    {{ book.title }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    
+    <div class="posts-list">
+        {% for post in posts %}
+        <article class="post-item">
+            <h2 class="post-title">
+                <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
+            </h2>
+            <div class="post-meta">
+                <span class="post-date">{{ post.publish_date|date:"d M Y"|upper }}</span>
+                <span class="post-separator">·</span>
+                <span class="post-author">{{ post.author.name }}</span>
+                <span class="post-separator">×</span>
+                <span class="post-book">{{ post.book.title }}</span>
+            </div>
+        </article>
+        {% empty %}
+        <p class="empty-state">No posts found matching your filters.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

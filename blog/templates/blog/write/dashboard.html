@@ -1,0 +1,83 @@
+{% extends 'blog/write/base_write.html' %}
+
+{% block title %}Dashboard - Writing Interface{% endblock %}
+
+{% block content %}
+<div class="write-dashboard">
+    <div class="dashboard-header">
+        <h2>All Posts</h2>
+        <a href="{% url 'post_editor_new' %}" class="btn btn-primary">New Post</a>
+    </div>
+    
+    <div class="dashboard-filters">
+        <div class="filter-tabs">
+            <a href="?filter=all" class="tab {% if filter_type == 'all' %}active{% endif %}">All</a>
+            <a href="?filter=drafts" class="tab {% if filter_type == 'drafts' %}active{% endif %}">Drafts</a>
+            <a href="?filter=published" class="tab {% if filter_type == 'published' %}active{% endif %}">Published</a>
+        </div>
+        
+        <div class="book-filter">
+            <select onchange="window.location.href='?filter={{ filter_type }}&book=' + this.value">
+                <option value="">All Books</option>
+                {% for book in books %}
+                <option value="{{ book.slug }}" {% if book_filter == book.slug %}selected{% endif %}>
+                    {{ book.title }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    
+    <div class="posts-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Book</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for post in posts %}
+                <tr>
+                    <td>
+                        <a href="{% url 'post_editor' post.id %}">{{ post.title|default:"Untitled" }}</a>
+                    </td>
+                    <td>{{ post.book.title }}</td>
+                    <td>{{ post.publish_date|date:"M d, Y" }}</td>
+                    <td>
+                        {% if post.is_published %}
+                        <span class="status-badge published">Published</span>
+                        {% else %}
+                        <span class="status-badge draft">Draft</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions">
+                        <a href="{% url 'post_editor' post.id %}">Edit</a>
+                        <a href="{% url 'post_preview' post.id %}">Preview</a>
+                        {% if post.is_published %}
+                        <form method="post" action="{% url 'post_unpublish' post.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-link">Unpublish</button>
+                        </form>
+                        {% else %}
+                        <form method="post" action="{% url 'post_publish' post.id %}" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-link">Publish</button>
+                        </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" class="empty-state">No posts yet. <a href="{% url 'post_editor_new' %}">Create your first post</a></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
