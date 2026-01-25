@@ -63,11 +63,36 @@
                         </div>
                         <div class="form-group">
                             <label for="id_author">Author</label>
-                            {{ form.author }}
+                            <div class="field-with-button">
+                                {{ form.author }}
+                                <button type="button" id="add-author-btn" class="btn-add-item" title="Add new author" onclick="toggleAuthorForm()">+</button>
+                            </div>
+                            <div id="author-quick-form" class="quick-form" style="display:none;">
+                                <input type="text" id="author-quick-name" class="form-control" placeholder="Enter author name" style="margin-top: 8px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createAuthorQuick();}">
+                                <div class="quick-form-actions">
+                                    <button type="button" class="btn btn-primary btn-small" onclick="createAuthorQuick()">Add</button>
+                                    <button type="button" class="btn btn-secondary btn-small" onclick="toggleAuthorForm()">Cancel</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="id_book">Book/Source</label>
-                            {{ form.book }}
+                            <div class="field-with-button">
+                                {{ form.book }}
+                                <button type="button" id="add-book-btn" class="btn-add-item" title="Add new book/source" onclick="toggleBookForm()">+</button>
+                            </div>
+                            <div id="book-quick-form" class="quick-form" style="display:none;">
+                                <input type="text" id="book-quick-title" class="form-control" placeholder="Enter book/source title" style="margin-top: 8px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createBookQuick();}">
+                                <select id="book-quick-author" class="form-control" style="margin-top: 8px;">
+                                    {% for author in authors %}
+                                    <option value="{{ author.id }}">{{ author.name }}</option>
+                                    {% endfor %}
+                                </select>
+                                <div class="quick-form-actions">
+                                    <button type="button" class="btn btn-primary btn-small" onclick="createBookQuick()">Add</button>
+                                    <button type="button" class="btn btn-secondary btn-small" onclick="toggleBookForm()">Cancel</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="id_series_order">Series Order</label>
@@ -102,8 +127,20 @@
                 
                 <div class="form-section">
                     <h3>My Commentary</h3>
-                    {{ form.commentary }}
-                    <small>Markdown supported</small>
+                    <div class="commentary-editor-wrapper">
+                        <div class="editor-toolbar">
+                            <button type="button" id="insert-quote-btn" class="btn btn-secondary btn-small" title="Insert a quote block">
+                                <span class="quote-icon">"</span> Insert Quote
+                            </button>
+                            <small class="toolbar-hint">Markdown supported • Use > for blockquotes</small>
+                        </div>
+                        {{ form.commentary }}
+                        <div class="quote-help">
+                            <strong>Tip:</strong> Use markdown blockquote syntax for quotes:<br>
+                            <code>> This is a quote</code><br>
+                            Or click "Insert Quote" to add a quote template.
+                        </div>
+                    </div>
                 </div>
                 
                 <input type="hidden" name="points" id="points-json" value="">
@@ -130,6 +167,136 @@
     {% else %}
     window.autosaveUrl = "{% url 'autosave' %}";
     {% endif %}
+    window.createAuthorUrl = "{% url 'create_author' %}";
+    window.createBookUrl = "{% url 'create_book' %}";
+    
+    // Quick form toggles
+    function toggleAuthorForm() {
+        const form = document.getElementById('author-quick-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            document.getElementById('author-quick-name').focus();
+        } else {
+            form.style.display = 'none';
+            document.getElementById('author-quick-name').value = '';
+        }
+    }
+    
+    function toggleBookForm() {
+        const form = document.getElementById('book-quick-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            document.getElementById('book-quick-title').focus();
+        } else {
+            form.style.display = 'none';
+            document.getElementById('book-quick-title').value = '';
+        }
+    }
+    
+    // Quick create functions
+    function createAuthorQuick() {
+        const nameInput = document.getElementById('author-quick-name');
+        const name = nameInput.value.trim();
+        
+        if (!name) {
+            alert('Please enter an author name');
+            return;
+        }
+        
+        fetch(window.createAuthorUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({ name: name })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add to author dropdown
+                const authorSelect = document.getElementById('id_author');
+                const option = document.createElement('option');
+                option.value = data.author.id;
+                option.textContent = data.author.name;
+                authorSelect.appendChild(option);
+                authorSelect.value = data.author.id;
+                
+                // Add to book author dropdown if it exists
+                const bookAuthorSelect = document.getElementById('book-quick-author');
+                if (bookAuthorSelect) {
+                    const bookOption = document.createElement('option');
+                    bookOption.value = data.author.id;
+                    bookOption.textContent = data.author.name;
+                    bookAuthorSelect.appendChild(bookOption);
+                }
+                
+                // Close form and reset
+                toggleAuthorForm();
+            } else {
+                alert('Error: ' + (data.error || 'Could not create author'));
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while creating the author');
+        });
+    }
+    
+    function createBookQuick() {
+        const titleInput = document.getElementById('book-quick-title');
+        const authorSelect = document.getElementById('book-quick-author');
+        const title = titleInput.value.trim();
+        const authorId = parseInt(authorSelect.value);
+        
+        if (!title) {
+            alert('Please enter a book title');
+            return;
+        }
+        
+        if (!authorId) {
+            alert('Please select an author');
+            return;
+        }
+        
+        fetch(window.createBookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                title: title,
+                author: authorId,
+                description: '',
+                source_type: 'book',
+                status: 'in_progress',
+                is_series: false
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Add to book dropdown
+                const bookSelect = document.getElementById('id_book');
+                const option = document.createElement('option');
+                option.value = data.book.id;
+                option.textContent = data.book.title;
+                bookSelect.appendChild(option);
+                bookSelect.value = data.book.id;
+                
+                // Close form and reset
+                toggleBookForm();
+            } else {
+                const errorMsg = data.errors ? Object.values(data.errors).flat().join(', ') : (data.error || 'Could not create book');
+                alert('Error: ' + errorMsg);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred while creating the book');
+        });
+    }
 </script>
 {% endblock %}
 

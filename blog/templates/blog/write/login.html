@@ -14,7 +14,11 @@
         
         <form method="post" class="login-form">
             {% csrf_token %}
-            {% if form.errors %}
+            {% if error %}
+            <div class="error-message">
+                {{ error }}
+            </div>
+            {% elif form.errors %}
             <div class="error-message">
                 Please enter a correct username and password.
             </div>

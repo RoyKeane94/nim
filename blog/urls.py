@@ -19,5 +19,7 @@ urlpatterns = [
     path('write/post/<int:post_id>/unpublish/', views.post_unpublish, name='post_unpublish'),
     path('write/autosave/', views.autosave, name='autosave'),
     path('write/autosave/<int:post_id>/', views.autosave, name='autosave'),
+    path('write/create-author/', views.create_author, name='create_author'),
+    path('write/create-book/', views.create_book, name='create_book'),
 ]
 

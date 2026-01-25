@@ -8,6 +8,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const referencePane = document.getElementById('reference-pane');
     const closeReferenceBtn = document.getElementById('close-reference');
     const postSearch = document.getElementById('post-search');
+    const insertQuoteBtn = document.getElementById('insert-quote-btn');
+    const commentaryTextarea = document.getElementById('id_commentary');
     
     let autosaveInterval;
     let postId = window.postId || null;
@@ -204,6 +206,76 @@ document.addEventListener('DOMContentLoaded', function() {
                     post.style.display = 'none';
                 }
             });
+        });
+    }
+    
+    // Insert Quote functionality
+    if (insertQuoteBtn && commentaryTextarea) {
+        insertQuoteBtn.addEventListener('click', function() {
+            const textarea = commentaryTextarea;
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+            const selectedText = textarea.value.substring(start, end);
+            
+            // If text is selected, wrap it in a quote block
+            // Otherwise, insert a quote template
+            let quoteText;
+            if (selectedText.trim()) {
+                // Wrap selected text in blockquote
+                const lines = selectedText.split('\n');
+                quoteText = lines.map(line => {
+                    // Don't add > if line is already a blockquote
+                    if (line.trim().startsWith('>')) {
+                        return line;
+                    }
+                    // Preserve leading whitespace but add > 
+                    const trimmed = line.trimStart();
+                    const leadingWhitespace = line.substring(0, line.length - trimmed.length);
+                    return leadingWhitespace + '> ' + trimmed;
+                }).join('\n');
+                
+                // Add attribution line if not present
+                if (!quoteText.includes('\n> \n> —')) {
+                    quoteText += '\n> \n> — Author Name';
+                }
+            } else {
+                // Insert a quote template with attribution placeholder
+                quoteText = '> Your quote text here\n> \n> — Author Name\n\n';
+            }
+            
+            // Insert the quote at cursor position
+            const beforeText = textarea.value.substring(0, start);
+            const afterText = textarea.value.substring(end);
+            const newText = beforeText + quoteText + afterText;
+            
+            textarea.value = newText;
+            
+            // Set cursor position at the start of the quote (or attribution if selected text was used)
+            let newCursorPos;
+            if (selectedText.trim()) {
+                // Position cursor at the attribution line
+                newCursorPos = textarea.value.indexOf('— Author Name', start);
+                if (newCursorPos > 0) {
+                    // Select "Author Name" for easy editing
+                    textarea.setSelectionRange(newCursorPos + 2, newCursorPos + 12);
+                } else {
+                    textarea.setSelectionRange(start + quoteText.length, start + quoteText.length);
+                }
+            } else {
+                // Position cursor at the start of the quote text
+                newCursorPos = textarea.value.indexOf('Your quote text here', start);
+                if (newCursorPos > 0) {
+                    textarea.setSelectionRange(newCursorPos, newCursorPos + 20);
+                } else {
+                    newCursorPos = start + quoteText.indexOf('> ') + 2;
+                    textarea.setSelectionRange(newCursorPos, newCursorPos);
+                }
+            }
+            
+            textarea.focus();
+            
+            // Trigger change event for auto-save
+            textarea.dispatchEvent(new Event('change', { bubbles: true }));
         });
     }
     

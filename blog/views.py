@@ -1,11 +1,12 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import login
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
 from django.db.models import Q
+from functools import wraps
 import json
 try:
     import markdown2
@@ -16,7 +17,20 @@ except ImportError:
     markdown2 = type('obj', (object,), {'markdown': markdown2_markdown})
 
 from .models import Post, Author, Book, NewsletterSubscriber
-from .forms import PostForm, NewsletterForm
+from .forms import PostForm, NewsletterForm, AuthorForm, BookForm
+
+
+# Decorator to restrict access to superusers only
+def superuser_required(view_func):
+    """Decorator that checks if user is a superuser"""
+    @wraps(view_func)
+    def _wrapped_view(request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return redirect('write_login')
+        if not request.user.is_superuser:
+            return HttpResponseForbidden("Access denied. Only superusers can access this page.")
+        return view_func(request, *args, **kwargs)
+    return _wrapped_view
 
 
 # Public Views
@@ -94,7 +108,11 @@ def post_detail(request, slug):
     
     # Convert commentary markdown to HTML
     try:
-        commentary_html = markdown2.markdown(post.commentary, extras=['fenced-code-blocks'])
+        # Use markdown2 with blockquote support
+        commentary_html = markdown2.markdown(
+            post.commentary, 
+            extras=['fenced-code-blocks', 'code-friendly']
+        )
     except:
         commentary_html = post.commentary.replace('\n', '<br>')
     
@@ -128,7 +146,7 @@ def subscribe(request):
 
 # Writing Interface Views
 
-@login_required
+@superuser_required
 def write_dashboard(request):
     """Writing dashboard - list all posts"""
     posts = Post.objects.all().order_by('-updated_at')
@@ -156,7 +174,7 @@ def write_dashboard(request):
     return render(request, 'blog/write/dashboard.html', context)
 
 
-@login_required
+@superuser_required
 def post_editor(request, post_id=None):
     """Post editor - create or edit posts"""
     post = None
@@ -203,14 +221,18 @@ def post_editor(request, post_id=None):
     return render(request, 'blog/write/editor.html', context)
 
 
-@login_required
+@superuser_required
 def post_preview(request, post_id):
     """Preview how post will look when published"""
     post = get_object_or_404(Post, pk=post_id)
     
     # Convert commentary markdown to HTML
     try:
-        commentary_html = markdown2.markdown(post.commentary, extras=['fenced-code-blocks'])
+        # Use markdown2 with blockquote support
+        commentary_html = markdown2.markdown(
+            post.commentary, 
+            extras=['fenced-code-blocks', 'code-friendly']
+        )
     except:
         commentary_html = post.commentary.replace('\n', '<br>')
     
@@ -222,7 +244,7 @@ def post_preview(request, post_id):
     return render(request, 'blog/post.html', context)
 
 
-@login_required
+@superuser_required
 @require_http_methods(["POST"])
 def post_publish(request, post_id):
     """Publish a draft post"""
@@ -233,7 +255,7 @@ def post_publish(request, post_id):
     return redirect('write_dashboard')
 
 
-@login_required
+@superuser_required
 @require_http_methods(["POST"])
 def post_unpublish(request, post_id):
     """Unpublish a post"""
@@ -243,7 +265,7 @@ def post_unpublish(request, post_id):
     return redirect('write_dashboard')
 
 
-@login_required
+@superuser_required
 @require_http_methods(["POST"])
 def autosave(request, post_id=None):
     """Auto-save endpoint for AJAX"""
@@ -295,16 +317,88 @@ def autosave(request, post_id=None):
         return JsonResponse({'success': False, 'error': str(e)}, status=400)
 
 
+@superuser_required
+@require_http_methods(["POST"])
+def create_author(request):
+    """Create a new author via AJAX"""
+    try:
+        data = json.loads(request.body)
+        form = AuthorForm(data)
+        if form.is_valid():
+            author = form.save()
+            return JsonResponse({
+                'success': True,
+                'author': {
+                    'id': author.id,
+                    'name': author.name,
+                    'slug': author.slug
+                }
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            }, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@superuser_required
+@require_http_methods(["POST"])
+def create_book(request):
+    """Create a new book via AJAX"""
+    try:
+        data = json.loads(request.body)
+        form = BookForm(data)
+        if form.is_valid():
+            book = form.save()
+            return JsonResponse({
+                'success': True,
+                'book': {
+                    'id': book.id,
+                    'title': book.title,
+                    'slug': book.slug,
+                    'author_id': book.author_id
+                }
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            }, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
 def write_login(request):
-    """Login page for writing interface"""
-    if request.user.is_authenticated:
+    """Login page for writing interface - superusers only"""
+    # If already logged in as superuser, redirect to dashboard
+    if request.user.is_authenticated and request.user.is_superuser:
         return redirect('write_dashboard')
+    
+    # If logged in but not superuser, show error
+    if request.user.is_authenticated and not request.user.is_superuser:
+        return render(request, 'blog/write/login.html', {
+            'form': AuthenticationForm(),
+            'error': 'Access denied. Only superusers can access the writing interface.'
+        })
     
     if request.method == 'POST':
         form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            login(request, form.get_user())
-            return redirect('write_dashboard')
+            user = form.get_user()
+            login(request, user)
+            # Check if user is superuser after login
+            if user.is_superuser:
+                return redirect('write_dashboard')
+            else:
+                # Log out non-superuser and show error
+                from django.contrib.auth import logout
+                logout(request)
+                return render(request, 'blog/write/login.html', {
+                    'form': AuthenticationForm(),
+                    'error': 'Access denied. Only superusers can access the writing interface.'
+                })
     else:
         form = AuthenticationForm()
     

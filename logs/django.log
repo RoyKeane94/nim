@@ -1,0 +1,7 @@
+INFO 2026-01-25 20:52:07,185 autoreload Watching for file changes with StatReloader
+INFO 2026-01-25 20:52:08,875 log "GET / HTTP/1.1" 200 1727
+INFO 2026-01-25 20:52:08,912 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-01-25 20:52:08,913 log "GET /static/blog/css/style.css HTTP/1.1" 200 24843
+INFO 2026-01-25 20:52:13,008 log "GET / HTTP/1.1" 200 1727
+INFO 2026-01-25 20:52:13,578 log "GET /archive/ HTTP/1.1" 200 2476
+INFO 2026-01-25 20:52:16,811 log "GET / HTTP/1.1" 200 1727
