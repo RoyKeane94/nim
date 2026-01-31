@@ -57,6 +57,15 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 
 ALLOWED_HOSTS = ['*']
 
+# CSRF: Required when using HTTPS or behind a proxy (e.g. Railway, Render).
+# Set to your deployment URL(s) including scheme (no trailing slash).
+CSRF_TRUSTED_ORIGINS = [
+    o.strip() for o in config('CSRF_TRUSTED_ORIGINS', default='https://nim-production-46b2.up.railway.app').split(',') if o.strip()
+]
+
+# When behind a reverse proxy (HTTPS at proxy, HTTP to app), Django must trust proxy headers.
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 
 # Application definition
 
