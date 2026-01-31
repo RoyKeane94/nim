@@ -1,4 +1,4 @@
-# Notes in the Margin - Django Blog
+# Notes in Margin - Django Blog
 
 A minimalist blog for publishing thoughtful distillations of books and podcasts, featuring a "10 points worth stealing + commentary" format.
 
