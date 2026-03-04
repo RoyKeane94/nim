@@ -16,16 +16,27 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load config from .env in project root (parent of Django project dir)
+# Config: .env file when present (local), otherwise os.environ (e.g. Railway production).
 _ENV_FILE = BASE_DIR.parent / '.env'
 
-# Try to import from python-decouple, fallback to os.environ if not available
 try:
     from decouple import Config, RepositoryEnv, Csv
-    _config_repo = RepositoryEnv(_ENV_FILE)
+
+    if _ENV_FILE.exists():
+        _config_repo = RepositoryEnv(_ENV_FILE)
+    else:
+        # Production (e.g. Railway): no .env file; read from environment variables.
+        class _EnvRepository:
+            def __contains__(self, key):
+                return key in os.environ
+
+            def __getitem__(self, key):
+                return os.environ[key]
+
+        _config_repo = _EnvRepository()
     config = Config(_config_repo)
 except (ImportError, AttributeError):
-    # Fallback: load .env into os.environ, then provide a simple config()
+    # Fallback when python-decouple is not available
     if _ENV_FILE.exists():
         with open(_ENV_FILE) as f:
             for line in f:
@@ -33,6 +44,7 @@ except (ImportError, AttributeError):
                 if line and not line.startswith('#') and '=' in line:
                     k, _, v = line.partition('=')
                     os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+
     def config(key, default=None, cast=None):
         value = os.environ.get(key, default)
         if value is None:
@@ -41,7 +53,6 @@ except (ImportError, AttributeError):
             return str(value).lower() in ('true', '1', 'yes', 'on')
         if cast is int:
             return int(value)
-        # Handle Csv cast - can be passed as class or instance
         if cast:
             cast_name = getattr(cast, '__name__', None) or type(cast).__name__
             if cast_name == 'Csv':
@@ -51,7 +62,6 @@ except (ImportError, AttributeError):
         return value
 
     class Csv:
-        """Csv cast class for python-decouple compatibility"""
         pass
 
 
