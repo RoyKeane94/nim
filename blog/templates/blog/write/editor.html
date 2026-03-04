@@ -162,7 +162,9 @@
                             <textarea class="point-text-input" 
                                       placeholder="Point description"
                                       rows="3"
-                                      data-point-field="text">{{ point.text }}</textarea>
+                                      data-point-field="text"
+                                      maxlength="500">{{ point.text }}</textarea>
+                            <div class="point-char-count" aria-live="polite"><span class="point-char-remaining">500</span> characters remaining</div>
                         </div>
                         {% endfor %}
                     </div>

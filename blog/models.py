@@ -5,7 +5,7 @@ from django.urls import reverse
 
 class Author(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=200)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def save(self, *args, **kwargs):
@@ -22,7 +22,7 @@ class Author(models.Model):
 
 class Tag(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=200)
     description = models.TextField(blank=True)
 
     def save(self, *args, **kwargs):
@@ -39,7 +39,7 @@ class Tag(models.Model):
 
 class Guest(models.Model):
     name = models.CharField(max_length=200)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=200)
     bio = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     tags = models.ManyToManyField(Tag, related_name='guests', blank=True)
@@ -71,7 +71,7 @@ class Book(models.Model):
     ]
     
     title = models.CharField(max_length=300)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=300)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
     description = models.TextField(blank=True)  # Italic description for series page
     source_type = models.CharField(max_length=50, choices=SOURCE_TYPES, default='book')
@@ -99,7 +99,7 @@ class Book(models.Model):
 
 class Post(models.Model):
     title = models.CharField(max_length=300)
-    slug = models.SlugField(unique=True, blank=True)
+    slug = models.SlugField(unique=True, blank=True, max_length=300)
     author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='posts')
     

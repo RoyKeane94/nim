@@ -1,5 +1,7 @@
 // Editor functionality - auto-save, points management, reference pane
 
+const WORTH_STEALING_TEXT_MAX = 500;
+
 document.addEventListener('DOMContentLoaded', function() {
     const postForm = document.getElementById('post-form');
     const pointsContainer = document.getElementById('points-container');
@@ -23,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 addPoint();
             }
         }
+        // Set initial character counters for all point textareas
+        pointsContainer.querySelectorAll('.point-text-input').forEach(function(ta) {
+            updatePointCharCount(ta);
+        });
     }
     
     // Add point
@@ -49,10 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
             <textarea class="point-text-input" 
                       placeholder="Point description"
                       rows="3"
-                      data-point-field="text"></textarea>
+                      data-point-field="text"
+                      maxlength="${WORTH_STEALING_TEXT_MAX}"></textarea>
+            <div class="point-char-count" aria-live="polite"><span class="point-char-remaining">${WORTH_STEALING_TEXT_MAX}</span> characters remaining</div>
         `;
         pointsContainer.appendChild(pointDiv);
         updatePointNumbers();
+        updatePointCharCount(pointDiv.querySelector('.point-text-input'));
     }
     
     // Remove point
@@ -64,6 +73,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
+    // Update "characters remaining" for one Worth Stealing point
+    function updatePointCharCount(textarea) {
+        if (!textarea) return;
+        const pointEditor = textarea.closest('.point-editor');
+        const remainingEl = pointEditor?.querySelector('.point-char-remaining');
+        if (!remainingEl) return;
+        const len = (textarea.value || '').length;
+        const remaining = Math.max(0, WORTH_STEALING_TEXT_MAX - len);
+        remainingEl.textContent = remaining;
+        const countDiv = pointEditor.querySelector('.point-char-count');
+        if (countDiv) {
+            countDiv.classList.toggle('char-count-warning', remaining <= 50);
+            countDiv.classList.toggle('char-count-zero', remaining === 0);
+        }
+    }
+
     // Update point numbers
     function updatePointNumbers() {
         const points = pointsContainer.querySelectorAll('.point-editor');
@@ -286,6 +311,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Worth Stealing character counter: update on input
+    if (pointsContainer) {
+        pointsContainer.addEventListener('input', function(e) {
+            if (e.target.classList.contains('point-text-input')) {
+                updatePointCharCount(e.target);
+            }
+        });
+    }
+
     // Initialize
     if (addPointBtn) {
         addPointBtn.addEventListener('click', addPoint);

@@ -245,3 +245,22 @@ INFO 2026-03-04 17:48:49,898 autoreload /Users/tombarratt/Desktop/Coding_Project
 INFO 2026-03-04 17:48:50,258 autoreload Watching for file changes with StatReloader
 INFO 2026-03-04 17:49:32,880 log "GET / HTTP/1.1" 200 3033
 INFO 2026-03-04 17:50:46,341 log "GET / HTTP/1.1" 200 3033
+INFO 2026-03-04 18:11:18,522 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 18:11:19,357 log "GET / HTTP/1.1" 200 3083
+INFO 2026-03-04 18:11:19,371 log "GET /static/blog/css/home.css HTTP/1.1" 200 11017
+INFO 2026-03-04 18:11:19,371 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-03-04 18:11:19,603 log "GET /static/blog/favicon.png HTTP/1.1" 200 215033
+INFO 2026-03-04 18:11:23,701 log "GET /write/ HTTP/1.1" 200 4202
+INFO 2026-03-04 18:11:23,713 log "GET /static/blog/js/editor.js HTTP/1.1" 200 12059
+INFO 2026-03-04 18:11:23,713 log "GET /static/blog/css/style.css HTTP/1.1" 200 26071
+INFO 2026-03-04 19:45:23,910 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 19:45:47,362 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 19:45:52,150 log "GET / HTTP/1.1" 200 3083
+INFO 2026-03-04 19:45:52,155 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-04 19:45:52,401 log "GET /static/blog/favicon.png HTTP/1.1" 304 0
+INFO 2026-03-04 19:45:56,309 log "GET /write/ HTTP/1.1" 200 4202
+INFO 2026-03-04 19:45:56,340 log "GET /static/blog/js/editor.js HTTP/1.1" 200 13641
+INFO 2026-03-04 19:45:56,341 log "GET /static/blog/css/style.css HTTP/1.1" 200 26298
+INFO 2026-03-04 19:46:01,016 log "GET /write/post/2/ HTTP/1.1" 200 33315
+INFO 2026-03-04 19:46:11,935 log "POST /write/autosave/2/ HTTP/1.1" 200 79
+INFO 2026-03-04 19:46:15,541 log "POST /write/autosave/2/ HTTP/1.1" 200 79

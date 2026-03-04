@@ -1120,6 +1120,20 @@ textarea.form-control {
     resize: vertical;
 }
 
+.point-char-count {
+    font-size: 0.8rem;
+    color: var(--meta-color, #6b7280);
+    margin-top: 4px;
+}
+
+.point-char-count.char-count-warning {
+    color: #b45309;
+}
+
+.point-char-count.char-count-zero {
+    color: #b91c1c;
+}
+
 /* Buttons */
 .btn {
     padding: 10px 20px;
