@@ -102,12 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function autosave() {
         if (!autosaveUrl || !postForm) return;
         
+        const guestIds = Array.from(document.querySelectorAll('input[name="guests"]:checked')).map(function(cb) { return cb.value; });
+        const tagIds = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(function(cb) { return cb.value; });
         const formData = {
             title: document.getElementById('id_title')?.value || '',
             publish_date: document.getElementById('id_publish_date')?.value || '',
             author_id: document.getElementById('id_author')?.value || '',
             book_id: document.getElementById('id_book')?.value || '',
             series_order: document.getElementById('id_series_order')?.value || null,
+            guest_ids: guestIds,
+            tag_ids: tagIds,
             points: getPointsData(),
             commentary: document.getElementById('id_commentary')?.value || ''
         };
@@ -144,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup auto-save
     if (postForm && autosaveUrl) {
-        // Auto-save on form changes
+        // Auto-save on form changes (include checkbox lists for guests/tags)
         const formInputs = postForm.querySelectorAll('input, textarea, select');
         formInputs.forEach(input => {
             input.addEventListener('change', autosave);
@@ -152,6 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearTimeout(autosaveInterval);
                 autosaveInterval = setTimeout(autosave, 2000);
             });
+        });
+        document.querySelectorAll('#guests-list input[type="checkbox"], #tags-list input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', autosave);
         });
         
         // Auto-save every 30 seconds

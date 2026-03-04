@@ -102,12 +102,16 @@ document.addEventListener('DOMContentLoaded', function() {
     function autosave() {
         if (!autosaveUrl || !postForm) return;
         
+        const guestIds = Array.from(document.querySelectorAll('input[name="guests"]:checked')).map(function(cb) { return cb.value; });
+        const tagIds = Array.from(document.querySelectorAll('input[name="tags"]:checked')).map(function(cb) { return cb.value; });
         const formData = {
             title: document.getElementById('id_title')?.value || '',
             publish_date: document.getElementById('id_publish_date')?.value || '',
             author_id: document.getElementById('id_author')?.value || '',
             book_id: document.getElementById('id_book')?.value || '',
             series_order: document.getElementById('id_series_order')?.value || null,
+            guest_ids: guestIds,
+            tag_ids: tagIds,
             points: getPointsData(),
             commentary: document.getElementById('id_commentary')?.value || ''
         };
@@ -144,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Setup auto-save
     if (postForm && autosaveUrl) {
-        // Auto-save on form changes
+        // Auto-save on form changes (include checkbox lists for guests/tags)
         const formInputs = postForm.querySelectorAll('input, textarea, select');
         formInputs.forEach(input => {
             input.addEventListener('change', autosave);
@@ -152,6 +156,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearTimeout(autosaveInterval);
                 autosaveInterval = setTimeout(autosave, 2000);
             });
+        });
+        document.querySelectorAll('#guests-list input[type="checkbox"], #tags-list input[type="checkbox"]').forEach(function(cb) {
+            cb.addEventListener('change', autosave);
         });
         
         // Auto-save every 30 seconds
@@ -285,166 +292,5 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     initializePoints();
-    
-    // Author and Book creation modals
-    const addAuthorBtn = document.getElementById('add-author-btn');
-    const addBookBtn = document.getElementById('add-book-btn');
-    const authorModal = document.getElementById('author-modal');
-    const bookModal = document.getElementById('book-modal');
-    const authorForm = document.getElementById('author-form');
-    const bookForm = document.getElementById('book-form');
-    
-    // Open modals
-    if (addAuthorBtn) {
-        addAuthorBtn.addEventListener('click', function() {
-            authorModal.style.display = 'flex';
-            document.getElementById('author-name').focus();
-        });
-    }
-    
-    if (addBookBtn) {
-        addBookBtn.addEventListener('click', function() {
-            bookModal.style.display = 'flex';
-            document.getElementById('book-title').focus();
-        });
-    }
-    
-    // Close modals
-    window.closeModal = function(modalId) {
-        const modal = document.getElementById(modalId);
-        if (modal) {
-            modal.style.display = 'none';
-        }
-    };
-    
-    // Close modal on backdrop click
-    if (authorModal) {
-        authorModal.addEventListener('click', function(e) {
-            if (e.target === authorModal) {
-                closeModal('author-modal');
-            }
-        });
-    }
-    
-    if (bookModal) {
-        bookModal.addEventListener('click', function(e) {
-            if (e.target === bookModal) {
-                closeModal('book-modal');
-            }
-        });
-    }
-    
-    // Handle author form submission
-    if (authorForm) {
-        authorForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('author-name').value.trim();
-            if (!name) {
-                alert('Please enter an author name');
-                return;
-            }
-            
-            fetch(window.createAuthorUrl || '/write/create-author/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-                body: JSON.stringify({ name: name })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Add new author to dropdown
-                    const authorSelect = document.getElementById('id_author');
-                    const option = document.createElement('option');
-                    option.value = data.author.id;
-                    option.textContent = data.author.name;
-                    authorSelect.appendChild(option);
-                    authorSelect.value = data.author.id;
-                    
-                    // Also add to book author dropdown if it exists
-                    const bookAuthorSelect = document.getElementById('book-author');
-                    if (bookAuthorSelect) {
-                        const bookOption = document.createElement('option');
-                        bookOption.value = data.author.id;
-                        bookOption.textContent = data.author.name;
-                        bookAuthorSelect.appendChild(bookOption);
-                    }
-                    
-                    // Close modal and reset form
-                    closeModal('author-modal');
-                    authorForm.reset();
-                    
-                    // Show success message
-                    alert('Author created successfully!');
-                } else {
-                    alert('Error: ' + (data.error || 'Could not create author'));
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while creating the author');
-            });
-        });
-    }
-    
-    // Handle book form submission
-    if (bookForm) {
-        bookForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = {
-                title: document.getElementById('book-title').value.trim(),
-                author: parseInt(document.getElementById('book-author').value),
-                description: document.getElementById('book-description').value.trim(),
-                source_type: document.getElementById('book-source-type').value,
-                status: document.getElementById('book-status').value,
-                is_series: document.getElementById('book-is-series').checked
-            };
-            
-            if (!formData.title) {
-                alert('Please enter a book title');
-                return;
-            }
-            
-            fetch(window.createBookUrl || '/write/create-book/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-                },
-                body: JSON.stringify(formData)
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Add new book to dropdown
-                    const bookSelect = document.getElementById('id_book');
-                    const option = document.createElement('option');
-                    option.value = data.book.id;
-                    option.textContent = data.book.title;
-                    bookSelect.appendChild(option);
-                    bookSelect.value = data.book.id;
-                    
-                    // Close modal and reset form
-                    closeModal('book-modal');
-                    bookForm.reset();
-                    document.getElementById('book-is-series').checked = false;
-                    
-                    // Show success message
-                    alert('Book created successfully!');
-                } else {
-                    const errorMsg = data.errors ? Object.values(data.errors).flat().join(', ') : (data.error || 'Could not create book');
-                    alert('Error: ' + errorMsg);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('An error occurred while creating the book');
-            });
-        });
-    }
 });
 

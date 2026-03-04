@@ -20,6 +20,42 @@ class Author(models.Model):
         ordering = ['name']
 
 
+class Tag(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    slug = models.SlugField(unique=True, blank=True)
+    description = models.TextField(blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
+class Guest(models.Model):
+    name = models.CharField(max_length=200)
+    slug = models.SlugField(unique=True, blank=True)
+    bio = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    tags = models.ManyToManyField(Tag, related_name='guests', blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+
+
 class Book(models.Model):
     SOURCE_TYPES = [
         ('book', 'Book'),
@@ -30,7 +66,8 @@ class Book(models.Model):
     
     STATUS_CHOICES = [
         ('in_progress', 'In Progress'),
-        ('complete', 'Complete')
+        ('up_next', 'Up Next'),
+        ('complete', 'Complete'),
     ]
     
     title = models.CharField(max_length=300)
@@ -67,7 +104,11 @@ class Post(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='posts')
     
     # For series posts (e.g., Chapter 3)
-    series_order = models.IntegerField(null=True, blank=True)
+    series_order = models.IntegerField(
+        null=True,
+        blank=True,
+        help_text="Chapter or episode number within the book/podcast series.",
+    )
     
     publish_date = models.DateField()
     
@@ -76,6 +117,13 @@ class Post(models.Model):
     
     # Commentary
     commentary = models.TextField()
+
+    # Relationships for richer structure
+    # For podcast-style posts: one post can feature many guests
+    guests = models.ManyToManyField(Guest, related_name='posts', blank=True)
+
+    # Lightweight tagging for chapters/episodes and guests
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
     
     # Status
     is_published = models.BooleanField(default=False)

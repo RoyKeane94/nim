@@ -82,8 +82,15 @@
                                 <button type="button" id="add-book-btn" class="btn-add-item" title="Add new book/source" onclick="toggleBookForm()">+</button>
                             </div>
                             <div id="book-quick-form" class="quick-form" style="display:none;">
-                                <input type="text" id="book-quick-title" class="form-control" placeholder="Enter book/source title" style="margin-top: 8px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createBookQuick();}">
-                                <select id="book-quick-author" class="form-control" style="margin-top: 8px;">
+                                <label class="quick-form-label">Type</label>
+                                <select id="book-quick-source-type" class="form-control" style="margin-top: 4px;">
+                                    <option value="book">Book</option>
+                                    <option value="podcast">Podcast</option>
+                                </select>
+                                <label class="quick-form-label">Title</label>
+                                <input type="text" id="book-quick-title" class="form-control" placeholder="Enter title" style="margin-top: 4px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createBookQuick();}">
+                                <label class="quick-form-label">Author</label>
+                                <select id="book-quick-author" class="form-control" style="margin-top: 4px;">
                                     {% for author in authors %}
                                     <option value="{{ author.id }}">{{ author.name }}</option>
                                     {% endfor %}
@@ -97,6 +104,43 @@
                         <div class="form-group">
                             <label for="id_series_order">Series Order</label>
                             {{ form.series_order }}
+                        </div>
+                    </div>
+                    
+                    <div class="form-row form-row-multi">
+                        <div class="form-group">
+                            <label>Guests</label>
+                            <div class="field-with-button">
+                                <span class="multi-hint">For podcast episodes — who appeared on this episode?</span>
+                                <button type="button" id="add-guest-btn" class="btn-add-item" title="Add new guest" onclick="toggleGuestForm()">+</button>
+                            </div>
+                            <div id="guests-list" class="checkbox-multi-list">
+                                {{ form.guests }}
+                            </div>
+                            <div id="guest-quick-form" class="quick-form" style="display:none;">
+                                <input type="text" id="guest-quick-name" class="form-control" placeholder="Enter guest name" style="margin-top: 8px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createGuestQuick();}">
+                                <div class="quick-form-actions">
+                                    <button type="button" class="btn btn-primary btn-small" onclick="createGuestQuick()">Add</button>
+                                    <button type="button" class="btn btn-secondary btn-small" onclick="toggleGuestForm()">Cancel</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Tags</label>
+                            <div class="field-with-button">
+                                <span class="multi-hint">Topics or themes for this chapter/episode</span>
+                                <button type="button" id="add-tag-btn" class="btn-add-item" title="Add new tag" onclick="toggleTagForm()">+</button>
+                            </div>
+                            <div id="tags-list" class="checkbox-multi-list">
+                                {{ form.tags }}
+                            </div>
+                            <div id="tag-quick-form" class="quick-form" style="display:none;">
+                                <input type="text" id="tag-quick-name" class="form-control" placeholder="Enter tag name" style="margin-top: 8px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createTagQuick();}">
+                                <div class="quick-form-actions">
+                                    <button type="button" class="btn btn-primary btn-small" onclick="createTagQuick()">Add</button>
+                                    <button type="button" class="btn btn-secondary btn-small" onclick="toggleTagForm()">Cancel</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -169,6 +213,8 @@
     {% endif %}
     window.createAuthorUrl = "{% url 'create_author' %}";
     window.createBookUrl = "{% url 'create_book' %}";
+    window.createGuestUrl = "{% url 'create_guest' %}";
+    window.createTagUrl = "{% url 'create_tag' %}";
     
     // Quick form toggles
     function toggleAuthorForm() {
@@ -243,14 +289,90 @@
         });
     }
     
+    function toggleGuestForm() {
+        const form = document.getElementById('guest-quick-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            document.getElementById('guest-quick-name').focus();
+        } else {
+            form.style.display = 'none';
+            document.getElementById('guest-quick-name').value = '';
+        }
+    }
+    
+    function toggleTagForm() {
+        const form = document.getElementById('tag-quick-form');
+        if (form.style.display === 'none') {
+            form.style.display = 'block';
+            document.getElementById('tag-quick-name').focus();
+        } else {
+            form.style.display = 'none';
+            document.getElementById('tag-quick-name').value = '';
+        }
+    }
+    
+    function createGuestQuick() {
+        const nameInput = document.getElementById('guest-quick-name');
+        const name = nameInput.value.trim();
+        if (!name) { alert('Please enter a guest name'); return; }
+        fetch(window.createGuestUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+            body: JSON.stringify({ name: name })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const list = document.getElementById('guests-list');
+                const ul = list.querySelector('ul') || (function(){ const u = document.createElement('ul'); list.appendChild(u); return u; })();
+                const li = document.createElement('li');
+                const label = document.createElement('label');
+                const cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.name = 'guests'; cb.value = data.guest.id; cb.checked = true;
+                label.appendChild(cb); label.appendChild(document.createTextNode(' ' + data.guest.name));
+                li.appendChild(label); ul.appendChild(li);
+                toggleGuestForm();
+            } else { alert('Error: ' + (data.error || 'Could not create guest')); }
+        })
+        .catch(err => { console.error(err); alert('An error occurred'); });
+    }
+    
+    function createTagQuick() {
+        const nameInput = document.getElementById('tag-quick-name');
+        const name = nameInput.value.trim();
+        if (!name) { alert('Please enter a tag name'); return; }
+        fetch(window.createTagUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value },
+            body: JSON.stringify({ name: name })
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                const list = document.getElementById('tags-list');
+                const ul = list.querySelector('ul') || (function(){ const u = document.createElement('ul'); list.appendChild(u); return u; })();
+                const li = document.createElement('li');
+                const label = document.createElement('label');
+                const cb = document.createElement('input');
+                cb.type = 'checkbox'; cb.name = 'tags'; cb.value = data.tag.id; cb.checked = true;
+                label.appendChild(cb); label.appendChild(document.createTextNode(' ' + data.tag.name));
+                li.appendChild(label); ul.appendChild(li);
+                toggleTagForm();
+            } else { alert('Error: ' + (data.error || 'Could not create tag')); }
+        })
+        .catch(err => { console.error(err); alert('An error occurred'); });
+    }
+    
     function createBookQuick() {
         const titleInput = document.getElementById('book-quick-title');
         const authorSelect = document.getElementById('book-quick-author');
+        const sourceTypeSelect = document.getElementById('book-quick-source-type');
         const title = titleInput.value.trim();
         const authorId = parseInt(authorSelect.value);
+        const sourceType = sourceTypeSelect ? sourceTypeSelect.value : 'book';
         
         if (!title) {
-            alert('Please enter a book title');
+            alert('Please enter a title');
             return;
         }
         
@@ -269,7 +391,7 @@
                 title: title,
                 author: authorId,
                 description: '',
-                source_type: 'book',
+                source_type: sourceType,
                 status: 'in_progress',
                 is_series: false
             })

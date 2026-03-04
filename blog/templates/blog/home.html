@@ -1,27 +1,109 @@
 {% extends 'blog/base.html' %}
 
-{% block title %}Notes in Margin - Home{% endblock %}
+{% block title %}Notes in Margin{% endblock %}
 
 {% block content %}
-<div class="container">
-    <div class="posts-list">
-        {% for post in posts %}
-        <article class="post-item">
-            <h2 class="post-title">
-                <a href="{% url 'post_detail' post.slug %}">{{ post.title }}</a>
-            </h2>
-            <div class="post-meta">
-                <span class="post-date">{{ post.publish_date|date:"d M Y"|upper }}</span>
-                <span class="post-separator">·</span>
-                <span class="post-author">{{ post.author.name }}</span>
-                <span class="post-separator">×</span>
-                <span class="post-book">{{ post.book.title }}</span>
-            </div>
-        </article>
-        {% empty %}
-        <p class="empty-state">No posts yet. Check back soon!</p>
-        {% endfor %}
-    </div>
-</div>
-{% endblock %}
 
+<!-- HERO -->
+<div class="hero">
+  
+  <h1 class="hero-title">Ideas worth <em>stealing</em><br>from books & podcasts</h1>
+  <p class="hero-desc">A library, not a feed.<br>Summaries and essays from the best thinking I've encountered.</p>
+  <div class="hero-rule"></div>
+</div>
+
+<!-- MANIFESTO STRIP -->
+<div class="manifesto">
+  <p class="manifesto-text">I read a lot and remembered almost none of it. Writing to improve retention and maybe you find it interesting too.</p>
+  <p class="manifesto-attr">— The idea behind this project</p>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="main-layout">
+
+  <!-- POSTS -->
+  <div class="posts-column">
+    <div class="section-label">Recent Posts</div>
+
+    {% for post in posts %}
+    <article class="post-card">
+      <div class="post-meta">
+        <span class="post-source-type {% if post.book.source_type == 'podcast' %}podcast{% endif %}">{{ post.book.get_source_type_display }}</span>
+        <span class="post-date">{{ post.publish_date|date:"F Y" }}</span>
+      </div>
+      <h2 class="post-title"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+      <p class="post-attribution">
+        {% if post.book.source_type == 'podcast' %}
+          Inspired by {% for g in post.guests.all %}<strong>{{ g.name }}</strong>{% if not forloop.last %}, {% endif %}{% empty %}this episode{% endfor %}{% if post.guests.exists %} on {% endif %}<em>{{ post.book.title }}</em>
+        {% else %}
+          Inspired by <strong>{{ post.author.name }}</strong> × <em>{{ post.book.title }}</em>
+        {% endif %}
+      </p>
+      {% if post.points %}
+      <div class="worth-stealing-preview">
+        <div class="ws-label">Worth Stealing</div>
+        {% for point in post.points|slice:":3" %}
+          {% if point.text %}
+          <div class="ws-item">{{ point.text }}</div>
+          {% endif %}
+        {% endfor %}
+      </div>
+      {% endif %}
+      <p class="post-excerpt">{{ post.commentary|truncatewords:35 }}</p>
+      <div class="post-footer">
+        <div class="post-tags">
+          {% for tag in post.tags.all %}
+          <span class="tag">{{ tag.name }}</span>
+          {% endfor %}
+        </div>
+        <a href="{{ post.get_absolute_url }}" class="post-arrow" aria-label="Read {{ post.title }}">→</a>
+      </div>
+    </article>
+    {% empty %}
+    <p class="post-excerpt" style="padding: 32px 0;">No posts yet. Check back soon!</p>
+    {% endfor %}
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">About</div>
+      <div class="about-text">
+        <p>Written by Tom. I read a lot and forget most of it — so I started writing these to fix that.</p>
+        <p>Each post covers a chapter or episode: a few ideas worth stealing, and an essay on what I actually think about them.</p>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Currently Reading</div>
+      {% for book in shelf_books %}
+      <div class="shelf-item">
+        <div class="shelf-book">{{ book.title }}</div>
+        <div class="shelf-author">{{ book.author.name }}</div>
+        <div class="shelf-status">
+          {% if book.status == 'in_progress' %}● In progress{% elif book.status == 'up_next' %}◎ Up next{% else %}✓ Done — post coming{% endif %}
+        </div>
+      </div>
+      {% empty %}
+      <div class="about-text"><p>No books on the shelf yet.</p></div>
+      {% endfor %}
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Browse by Author</div>
+      {% for author in authors_with_counts %}
+      <a href="{% url 'library' %}?author={{ author.slug }}" class="author-item">
+        <span class="author-name">{{ author.name }}</span>
+        <span class="author-count">{{ author.post_count }} post{{ author.post_count|pluralize }}</span>
+      </a>
+      {% empty %}
+      <div class="about-text"><p>No authors yet.</p></div>
+      {% endfor %}
+    </div>
+
+  </aside>
+</div>
+
+{% endblock %}

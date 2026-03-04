@@ -5,7 +5,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.http import require_http_methods
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count, Case, When, Value, IntegerField
 from functools import wraps
 import json
 try:
@@ -16,8 +16,8 @@ except ImportError:
         return text
     markdown2 = type('obj', (object,), {'markdown': markdown2_markdown})
 
-from .models import Post, Author, Book, NewsletterSubscriber
-from .forms import PostForm, NewsletterForm, AuthorForm, BookForm
+from .models import Post, Author, Book, NewsletterSubscriber, Guest, Tag
+from .forms import PostForm, NewsletterForm, AuthorForm, BookForm, GuestForm, TagForm
 
 
 # Decorator to restrict access to superusers only
@@ -36,9 +36,38 @@ def superuser_required(view_func):
 # Public Views
 
 def home(request):
-    """Homepage - chronological list of published posts"""
-    posts = Post.objects.filter(is_published=True).order_by('-publish_date')
-    return render(request, 'blog/home.html', {'posts': posts})
+    """Homepage - chronological list of published posts with sidebar data"""
+    posts = (
+        Post.objects.filter(is_published=True)
+        .select_related('author', 'book')
+        .prefetch_related('tags', 'guests')
+        .order_by('-publish_date')
+    )
+    # Authors with published post count for "Browse by Author"
+    authors_with_counts = (
+        Author.objects.filter(posts__is_published=True)
+        .annotate(post_count=Count('posts', distinct=True))
+        .order_by('-post_count', 'name')
+    )
+    # Shelf: books for "Currently Reading" (in_progress first, then up_next, then complete)
+    status_order = Case(
+        When(status='in_progress', then=Value(0)),
+        When(status='up_next', then=Value(1)),
+        When(status='complete', then=Value(2)),
+        default=Value(3),
+        output_field=IntegerField(),
+    )
+    shelf_books = (
+        Book.objects.filter(status__in=['in_progress', 'up_next', 'complete'])
+        .select_related('author')
+        .order_by(status_order, 'title')
+    )[:6]
+    context = {
+        'posts': posts,
+        'authors_with_counts': authors_with_counts,
+        'shelf_books': shelf_books,
+    }
+    return render(request, 'blog/home.html', context)
 
 
 def archive(request):
@@ -202,6 +231,7 @@ def post_editor(request, post_id=None):
                 post.points = []
             
             post.save()
+            form.save_m2m()  # Save many-to-many: guests, tags
             return redirect('write_dashboard')
     else:
         form = PostForm(instance=post)
@@ -308,6 +338,21 @@ def autosave(request, post_id=None):
         
         post.save()
         
+        # Many-to-many: guests and tags (only for existing posts)
+        if post.pk:
+            if 'guest_ids' in data and isinstance(data['guest_ids'], list):
+                try:
+                    ids = [int(x) for x in data['guest_ids'] if x]
+                    post.guests.set(ids)
+                except (ValueError, TypeError):
+                    pass
+            if 'tag_ids' in data and isinstance(data['tag_ids'], list):
+                try:
+                    ids = [int(x) for x in data['tag_ids'] if x]
+                    post.tags.set(ids)
+                except (ValueError, TypeError):
+                    pass
+        
         return JsonResponse({
             'success': True,
             'post_id': post.id,
@@ -359,6 +404,58 @@ def create_book(request):
                     'title': book.title,
                     'slug': book.slug,
                     'author_id': book.author_id
+                }
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            }, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@superuser_required
+@require_http_methods(["POST"])
+def create_guest(request):
+    """Create a new guest via AJAX"""
+    try:
+        data = json.loads(request.body)
+        form = GuestForm(data)
+        if form.is_valid():
+            guest = form.save()
+            return JsonResponse({
+                'success': True,
+                'guest': {
+                    'id': guest.id,
+                    'name': guest.name,
+                    'slug': guest.slug
+                }
+            })
+        else:
+            return JsonResponse({
+                'success': False,
+                'errors': form.errors
+            }, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+
+
+@superuser_required
+@require_http_methods(["POST"])
+def create_tag(request):
+    """Create a new tag via AJAX"""
+    try:
+        data = json.loads(request.body)
+        form = TagForm(data)
+        if form.is_valid():
+            tag = form.save()
+            return JsonResponse({
+                'success': True,
+                'tag': {
+                    'id': tag.id,
+                    'name': tag.name,
+                    'slug': tag.slug
                 }
             })
         else:

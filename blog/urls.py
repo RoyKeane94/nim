@@ -4,7 +4,8 @@ from . import views
 urlpatterns = [
     # Public URLs
     path('', views.home, name='home'),
-    path('archive/', views.archive, name='archive'),
+    path('library/', views.archive, name='library'),
+    path('archive/', views.archive, name='archive'),  # kept for backwards compatibility
     path('series/<slug:book_slug>/', views.series_view, name='series'),
     path('post/<slug:slug>/', views.post_detail, name='post_detail'),
     path('subscribe/', views.subscribe, name='subscribe'),
@@ -21,5 +22,7 @@ urlpatterns = [
     path('write/autosave/<int:post_id>/', views.autosave, name='autosave'),
     path('write/create-author/', views.create_author, name='create_author'),
     path('write/create-book/', views.create_book, name='create_book'),
+    path('write/create-guest/', views.create_guest, name='create_guest'),
+    path('write/create-tag/', views.create_tag, name='create_tag'),
 ]
 

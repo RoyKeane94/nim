@@ -12,3 +12,236 @@ INFO 2026-01-31 15:12:30,895 autoreload /Users/tombarratt/Desktop/Coding_Project
 INFO 2026-01-31 15:12:31,251 autoreload Watching for file changes with StatReloader
 INFO 2026-01-31 15:12:44,513 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
 INFO 2026-01-31 15:12:44,770 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:39:16,540 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:39:18,895 log "GET / HTTP/1.1" 200 1719
+INFO 2026-03-04 16:39:18,939 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-03-04 16:39:18,941 log "GET /static/blog/css/style.css HTTP/1.1" 200 24839
+INFO 2026-03-04 16:39:26,529 log "GET / HTTP/1.1" 200 1719
+INFO 2026-03-04 16:39:27,248 log "GET /archive/ HTTP/1.1" 200 2468
+INFO 2026-03-04 16:39:32,478 log "GET / HTTP/1.1" 200 1719
+INFO 2026-03-04 16:44:05,114 log "GET / HTTP/1.1" 200 1085
+INFO 2026-03-04 16:44:39,804 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:44:41,830 log "GET / HTTP/1.1" 200 1085
+INFO 2026-03-04 16:45:27,629 log "GET / HTTP/1.1" 200 1085
+INFO 2026-03-04 16:45:27,647 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-03-04 16:45:27,648 log "GET /static/blog/css/style.css HTTP/1.1" 200 24839
+WARNING 2026-03-04 16:45:27,657 log Not Found: /favicon.ico
+WARNING 2026-03-04 16:45:27,657 log "GET /favicon.ico HTTP/1.1" 404 6751
+INFO 2026-03-04 16:46:37,230 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:46:42,098 log "GET /admin/ HTTP/1.1" 302 0
+INFO 2026-03-04 16:46:42,118 log "GET /admin/login/?next=/admin/ HTTP/1.1" 200 4080
+INFO 2026-03-04 16:46:42,143 log "GET /static/admin/css/nav_sidebar.css HTTP/1.1" 200 2810
+INFO 2026-03-04 16:46:42,144 log "GET /static/admin/css/login.css HTTP/1.1" 200 951
+INFO 2026-03-04 16:46:42,144 log "GET /static/admin/css/dark_mode.css HTTP/1.1" 200 3538
+INFO 2026-03-04 16:46:42,145 log "GET /static/admin/css/base.css HTTP/1.1" 200 23100
+INFO 2026-03-04 16:46:42,145 log "GET /static/admin/css/responsive.css HTTP/1.1" 200 16273
+INFO 2026-03-04 16:46:42,145 log "GET /static/admin/js/theme.js HTTP/1.1" 200 1653
+INFO 2026-03-04 16:46:42,146 log "GET /static/admin/js/nav_sidebar.js HTTP/1.1" 200 3063
+INFO 2026-03-04 16:46:47,798 log "POST /admin/login/?next=/admin/ HTTP/1.1" 302 0
+INFO 2026-03-04 16:46:47,807 log "GET /admin/ HTTP/1.1" 200 8867
+INFO 2026-03-04 16:46:47,825 log "GET /static/admin/img/icon-addlink.svg HTTP/1.1" 200 593
+INFO 2026-03-04 16:46:47,826 log "GET /static/admin/img/icon-changelink.svg HTTP/1.1" 200 978
+INFO 2026-03-04 16:46:47,826 log "GET /static/admin/css/dashboard.css HTTP/1.1" 200 441
+INFO 2026-03-04 16:46:49,725 log "GET /admin/auth/user/ HTTP/1.1" 200 14304
+INFO 2026-03-04 16:46:49,747 log "GET /static/admin/js/core.js HTTP/1.1" 200 6208
+INFO 2026-03-04 16:46:49,747 log "GET /static/admin/css/changelists.css HTTP/1.1" 200 7501
+INFO 2026-03-04 16:46:49,748 log "GET /static/admin/js/jquery.init.js HTTP/1.1" 200 347
+INFO 2026-03-04 16:46:49,750 log "GET /static/admin/js/admin/RelatedObjectLookups.js HTTP/1.1" 200 9777
+INFO 2026-03-04 16:46:49,752 log "GET /static/admin/js/prepopulate.js HTTP/1.1" 200 1531
+INFO 2026-03-04 16:46:49,753 log "GET /static/admin/js/actions.js HTTP/1.1" 200 8076
+INFO 2026-03-04 16:46:49,754 log "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2026-03-04 16:46:49,756 log "GET /static/admin/js/urlify.js HTTP/1.1" 200 7887
+INFO 2026-03-04 16:46:49,756 log "GET /static/admin/img/search.svg HTTP/1.1" 200 607
+INFO 2026-03-04 16:46:49,757 log "GET /static/admin/img/icon-yes.svg HTTP/1.1" 200 558
+INFO 2026-03-04 16:46:49,759 log "GET /static/admin/js/vendor/jquery/jquery.js HTTP/1.1" 200 285314
+INFO 2026-03-04 16:46:49,760 log "GET /static/admin/js/vendor/xregexp/xregexp.js HTTP/1.1" 200 325171
+INFO 2026-03-04 16:46:49,761 log "GET /static/admin/js/filters.js HTTP/1.1" 200 978
+INFO 2026-03-04 16:46:49,774 log "GET /static/admin/img/tooltag-add.svg HTTP/1.1" 200 593
+INFO 2026-03-04 16:46:49,774 log "GET /static/admin/img/icon-viewlink.svg HTTP/1.1" 200 928
+INFO 2026-03-04 16:46:49,775 log "GET /static/admin/img/sorting-icons.svg HTTP/1.1" 200 1761
+INFO 2026-03-04 16:46:54,235 log "GET /admin/blog/book/ HTTP/1.1" 200 14928
+INFO 2026-03-04 16:46:54,254 log "GET /static/admin/img/icon-no.svg HTTP/1.1" 200 645
+INFO 2026-03-04 16:46:54,256 log "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2026-03-04 16:46:54,944 log "GET /admin/blog/author/ HTTP/1.1" 200 12060
+INFO 2026-03-04 16:46:54,967 log "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2026-03-04 16:46:55,612 log "GET /admin/blog/book/ HTTP/1.1" 200 14928
+INFO 2026-03-04 16:46:55,635 log "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2026-03-04 16:46:56,646 log "GET /admin/blog/author/ HTTP/1.1" 200 12060
+INFO 2026-03-04 16:46:56,671 log "GET /admin/jsi18n/ HTTP/1.1" 200 3342
+INFO 2026-03-04 16:47:35,104 log "GET / HTTP/1.1" 200 1085
+INFO 2026-03-04 16:47:35,111 log "GET /static/blog/css/style.css HTTP/1.1" 200 24860
+INFO 2026-03-04 16:47:41,081 log "GET /write HTTP/1.1" 301 0
+INFO 2026-03-04 16:47:41,092 log "GET /write/ HTTP/1.1" 200 4051
+INFO 2026-03-04 16:47:41,106 log "GET /static/blog/js/editor.js HTTP/1.1" 200 11494
+INFO 2026-03-04 16:47:46,978 log "GET /write/post/2/ HTTP/1.1" 200 23596
+INFO 2026-03-04 16:47:46,996 log "GET /static/blog/css/style.css HTTP/1.1" 304 0
+INFO 2026-03-04 16:48:04,038 log "GET /write/ HTTP/1.1" 200 4051
+INFO 2026-03-04 16:48:04,056 log "GET /static/blog/css/style.css HTTP/1.1" 304 0
+INFO 2026-03-04 16:48:05,179 log "GET /write/ HTTP/1.1" 200 4051
+INFO 2026-03-04 16:48:24,942 log "GET /write/?filter=drafts HTTP/1.1" 200 3026
+INFO 2026-03-04 16:48:24,960 log "GET /static/blog/css/style.css HTTP/1.1" 304 0
+INFO 2026-03-04 16:48:25,501 log "GET /write/?filter=published HTTP/1.1" 200 2190
+INFO 2026-03-04 16:48:26,154 log "GET /write/?filter=drafts HTTP/1.1" 200 3026
+INFO 2026-03-04 16:48:27,136 log "GET /write/?filter=all HTTP/1.1" 200 4051
+INFO 2026-03-04 16:48:28,185 log "GET /write/?filter=drafts HTTP/1.1" 200 3026
+INFO 2026-03-04 16:48:28,723 log "GET /write/?filter=all HTTP/1.1" 200 4051
+INFO 2026-03-04 16:52:42,763 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/models.py changed, reloading.
+INFO 2026-03-04 16:52:43,046 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:57:31,981 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/models.py changed, reloading.
+INFO 2026-03-04 16:57:32,314 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:57:45,564 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/admin.py changed, reloading.
+INFO 2026-03-04 16:57:45,821 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:57:49,954 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/admin.py changed, reloading.
+INFO 2026-03-04 16:57:50,129 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:58:02,323 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 16:58:02,505 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:58:07,647 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 16:58:07,833 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 16:58:11,960 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 16:58:12,154 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:02:34,944 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/forms.py changed, reloading.
+INFO 2026-03-04 17:02:35,233 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:02:42,408 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 17:02:42,677 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:02:44,772 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 17:02:44,958 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:02:50,079 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 17:02:50,263 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:03:01,454 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/forms.py changed, reloading.
+INFO 2026-03-04 17:03:01,632 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:03:37,115 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-04 17:03:37,395 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:03:41,515 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/urls.py changed, reloading.
+INFO 2026-03-04 17:03:41,789 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:08:56,977 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:09:01,739 log "GET /write/?filter=all HTTP/1.1" 200 4250
+INFO 2026-03-04 17:09:01,773 log "GET /static/blog/css/style.css HTTP/1.1" 200 25905
+INFO 2026-03-04 17:09:05,837 log "GET / HTTP/1.1" 200 2983
+INFO 2026-03-04 17:09:05,845 log "GET /static/blog/css/home.css HTTP/1.1" 200 10832
+INFO 2026-03-04 17:09:40,325 log "GET /archive/ HTTP/1.1" 200 2056
+INFO 2026-03-04 17:10:37,377 log "GET /archive/ HTTP/1.1" 200 2056
+INFO 2026-03-04 17:10:37,398 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-04 17:11:17,692 log "GET /archive/?tab=authors HTTP/1.1" 200 2056
+INFO 2026-03-04 17:11:18,486 log "GET /archive/?tab=archive HTTP/1.1" 200 2056
+INFO 2026-03-04 17:11:19,117 log "GET /archive/? HTTP/1.1" 200 2056
+INFO 2026-03-04 17:11:20,137 log "GET /archive/?tab=archive HTTP/1.1" 200 2056
+INFO 2026-03-04 17:11:22,576 log "GET /archive/?tab=recent HTTP/1.1" 200 2056
+INFO 2026-03-04 17:11:24,424 log "GET / HTTP/1.1" 200 2983
+INFO 2026-03-04 17:12:49,609 log "GET /write/ HTTP/1.1" 200 4250
+INFO 2026-03-04 17:12:49,627 log "GET /static/blog/css/style.css HTTP/1.1" 304 0
+INFO 2026-03-04 17:12:52,589 log "GET / HTTP/1.1" 200 2983
+INFO 2026-03-04 17:12:52,607 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-04 17:12:54,420 log "GET /write/ HTTP/1.1" 200 4250
+INFO 2026-03-04 17:13:07,675 log "GET /write/post/new/ HTTP/1.1" 200 29792
+INFO 2026-03-04 17:13:32,996 log "POST /write/create-tag/ HTTP/1.1" 200 65
+WARNING 2026-03-04 17:13:34,806 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:13:34,807 log "POST /write/autosave/ HTTP/1.1" 400 58
+INFO 2026-03-04 17:13:35,657 log "POST /write/create-tag/ HTTP/1.1" 200 67
+WARNING 2026-03-04 17:13:37,514 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:13:37,514 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:13:37,695 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:13:37,696 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:14:08,295 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:14:08,296 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:14:38,315 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:14:38,316 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:15:08,304 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:15:08,305 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:15:38,300 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:15:38,301 log "POST /write/autosave/ HTTP/1.1" 400 58
+INFO 2026-03-04 17:15:54,074 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/urls.py changed, reloading.
+INFO 2026-03-04 17:15:54,484 autoreload Watching for file changes with StatReloader
+WARNING 2026-03-04 17:16:08,309 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:16:08,310 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:16:38,307 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:16:38,308 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:17:22,318 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:17:22,319 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:18:22,351 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:18:22,352 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:19:22,321 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:19:22,324 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:20:22,333 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:20:22,335 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:21:22,331 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:21:22,337 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:22:22,413 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:22:22,414 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:23:22,307 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:23:22,322 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:24:22,302 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:24:22,304 log "POST /write/autosave/ HTTP/1.1" 400 58
+WARNING 2026-03-04 17:24:41,562 log Bad Request: /write/autosave/
+WARNING 2026-03-04 17:24:41,562 log "POST /write/autosave/ HTTP/1.1" 400 58
+INFO 2026-03-04 17:24:43,513 log "GET /write/post/new/ HTTP/1.1" 200 30708
+INFO 2026-03-04 17:24:43,538 log "GET /static/blog/css/style.css HTTP/1.1" 200 26071
+INFO 2026-03-04 17:25:09,033 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:25:12,104 log "GET /write/ HTTP/1.1" 200 4202
+INFO 2026-03-04 17:25:14,405 log "GET / HTTP/1.1" 200 3120
+INFO 2026-03-04 17:25:14,435 log "GET /static/blog/css/home.css HTTP/1.1" 200 11017
+INFO 2026-03-04 17:25:14,615 log "GET /static/blog/favicon.png HTTP/1.1" 200 215033
+INFO 2026-03-04 17:25:35,308 log "GET /library/ HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:44,858 log "GET /library/?tab=archive HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:45,442 log "GET /library/?tab=authors HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:46,127 log "GET /library/?tab=recent HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:46,790 log "GET /library/?tab=archive HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:47,292 log "GET /library/?tab=authors HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:47,791 log "GET /library/?tab=archive HTTP/1.1" 200 2197
+INFO 2026-03-04 17:25:48,209 log "GET /library/?tab=recent HTTP/1.1" 200 2197
+INFO 2026-03-04 17:28:35,087 log "GET / HTTP/1.1" 200 3120
+INFO 2026-03-04 17:28:35,107 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-04 17:32:09,019 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:32:09,352 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:32:31,720 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:32:31,963 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:33:16,644 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:35:42,303 autoreload Watching for file changes with StatReloader
+ERROR 2026-03-04 17:37:16,637 log "GET / HTTP/1.1" 500 59
+INFO 2026-03-04 17:41:09,740 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:41:10,217 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:41:22,530 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:41:22,819 autoreload Watching for file changes with StatReloader
+ERROR 2026-03-04 17:42:25,709 log Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/http/request.py", line 205, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+WARNING 2026-03-04 17:42:25,712 log "GET / HTTP/1.1" 400 71520
+INFO 2026-03-04 17:42:54,129 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:42:54,480 autoreload Watching for file changes with StatReloader
+ERROR 2026-03-04 17:42:55,629 log Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+Traceback (most recent call last):
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/core/handlers/exception.py", line 55, in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/utils/deprecation.py", line 308, in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/middleware/common.py", line 48, in process_request
+    host = request.get_host()
+           ^^^^^^^^^^^^^^^^^^
+  File "/Users/tombarratt/Desktop/Coding_Projects/nim/nim/venv/lib/python3.12/site-packages/django/http/request.py", line 205, in get_host
+    raise DisallowedHost(msg)
+django.core.exceptions.DisallowedHost: Invalid HTTP_HOST header: '127.0.0.1:8000'. You may need to add '127.0.0.1' to ALLOWED_HOSTS.
+WARNING 2026-03-04 17:42:55,661 log "GET / HTTP/1.1" 400 71576
+INFO 2026-03-04 17:43:19,932 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/nim/settings.py changed, reloading.
+INFO 2026-03-04 17:43:20,210 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:44:08,349 log "GET / HTTP/1.1" 200 3096
+INFO 2026-03-04 17:44:08,367 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-04 17:46:35,881 log "GET / HTTP/1.1" 200 3037
+INFO 2026-03-04 17:46:53,025 log "GET / HTTP/1.1" 200 3033
+INFO 2026-03-04 17:48:44,902 log "GET / HTTP/1.1" 200 3081
+INFO 2026-03-04 17:48:44,922 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-04 17:48:49,898 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/admin.py changed, reloading.
+INFO 2026-03-04 17:48:50,258 autoreload Watching for file changes with StatReloader
+INFO 2026-03-04 17:49:32,880 log "GET / HTTP/1.1" 200 3033
+INFO 2026-03-04 17:50:46,341 log "GET / HTTP/1.1" 200 3033

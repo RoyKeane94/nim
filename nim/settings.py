@@ -13,12 +13,26 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 from pathlib import Path
 import os
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load config from .env in project root (parent of Django project dir)
+_ENV_FILE = BASE_DIR.parent / '.env'
+
 # Try to import from python-decouple, fallback to os.environ if not available
 try:
-    from decouple import config, Csv
+    from decouple import Config, RepositoryEnv, Csv
+    _config_repo = RepositoryEnv(_ENV_FILE)
+    config = Config(_config_repo)
 except (ImportError, AttributeError):
-    # Fallback if python-decouple is not installed or wrong package is installed
-    # This handles the case where 'decouple' package (wrong one) is installed
+    # Fallback: load .env into os.environ, then provide a simple config()
+    if _ENV_FILE.exists():
+        with open(_ENV_FILE) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    k, _, v = line.partition('=')
+                    os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
     def config(key, default=None, cast=None):
         value = os.environ.get(key, default)
         if value is None:
@@ -35,32 +49,32 @@ except (ImportError, AttributeError):
                     return [v.strip() for v in value.split(',') if v.strip()]
                 return value
         return value
-    
+
     class Csv:
         """Csv cast class for python-decouple compatibility"""
         pass
-
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY is required - set it in your .env file
-# For development, you can use the default, but generate a new one for production
-SECRET_KEY = config('SECRET_KEY', default='django-insecure-nn7=qyu@(av8lbza8bl%zb*fudj99011l(z1lb)u*h88b5)iu7')
+# SECRET_KEY is read from .env (project root) — no default; set SECRET_KEY there.
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=True, cast=bool)
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    o.strip() for o in config('ALLOWED_HOSTS', default='127.0.0.1,localhost,www.notesinmargin.co.uk,notesinmargin.co.uk').split(',') if o.strip()
+]
 
-# CSRF: Required when using HTTPS or behind a proxy (e.g. Railway, Render).
-# Set to your deployment URL(s) including scheme (no trailing slash).
+# CSRF: Required when using HTTPS or behind a proxy. Full origins with https:// (comma-separated).
 CSRF_TRUSTED_ORIGINS = [
-    o.strip() for o in config('CSRF_TRUSTED_ORIGINS', default='https://nim-production-46b2.up.railway.app').split(',') if o.strip()
+    o.strip() for o in config(
+        'CSRF_TRUSTED_ORIGINS',
+        default='https://www.notesinmargin.co.uk,https://notesinmargin.co.uk,https://nim-production-46b2.up.railway.app'
+    ).split(',') if o.strip()
 ]
 
 # When behind a reverse proxy (HTTPS at proxy, HTTP to app), Django must trust proxy headers.

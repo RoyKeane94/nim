@@ -1,12 +1,12 @@
 {% extends 'blog/base.html' %}
 
-{% block title %}Archive - Notes in Margin{% endblock %}
+{% block title %}Library - Notes in the Margin{% endblock %}
 
 {% block content %}
 <div class="container archive-container">
     <div class="archive-tabs">
         <a href="?tab=recent" class="tab {% if active_tab == 'recent' %}active{% endif %}">Recent</a>
-        <a href="?tab=archive" class="tab {% if active_tab == 'archive' %}active{% endif %}">Archive</a>
+        <a href="?tab=archive" class="tab {% if active_tab == 'archive' %}active{% endif %}">Library</a>
         <a href="?tab=authors" class="tab {% if active_tab == 'authors' %}active{% endif %}">Authors</a>
     </div>
     

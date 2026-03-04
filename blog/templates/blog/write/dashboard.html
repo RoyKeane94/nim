@@ -33,7 +33,8 @@
             <thead>
                 <tr>
                     <th>Title</th>
-                    <th>Book</th>
+                    <th>Source</th>
+                    <th>Book / Show</th>
                     <th>Date</th>
                     <th>Status</th>
                     <th>Actions</th>
@@ -45,6 +46,7 @@
                     <td>
                         <a href="{% url 'post_editor' post.id %}">{{ post.title|default:"Untitled" }}</a>
                     </td>
+                    <td><span class="source-type-badge {{ post.book.source_type }}">{{ post.book.get_source_type_display }}</span></td>
                     <td>{{ post.book.title }}</td>
                     <td>{{ post.publish_date|date:"M d, Y" }}</td>
                     <td>
@@ -72,7 +74,7 @@
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="5" class="empty-state">No posts yet. <a href="{% url 'post_editor_new' %}">Create your first post</a></td>
+                    <td colspan="6" class="empty-state">No posts yet. <a href="{% url 'post_editor_new' %}">Create your first post</a></td>
                 </tr>
                 {% endfor %}
             </tbody>

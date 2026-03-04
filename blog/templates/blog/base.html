@@ -5,46 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Notes in Margin{% endblock %}</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'blog/css/style.css' %}">
+    <link rel="icon" href="{% static 'blog/favicon.png' %}" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'blog/css/home.css' %}">
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <div class="margin-line"></div>
-    
-    <header class="site-header">
-        <div class="container">
-            <h1 class="site-title">
-                <a href="{% url 'home' %}">Notes in Margin</a>
-                <span class="pulsing-dot"></span>
-            </h1>
-            <nav class="main-nav">
-                <a href="{% url 'home' %}">Home</a>
-                <a href="{% url 'archive' %}">Archive</a>
-            </nav>
-        </div>
-    </header>
-    
-    <main class="main-content">
-        {% block content %}{% endblock %}
-    </main>
-    
-    <footer class="site-footer">
-        <div class="container">
-            <div class="newsletter-signup">
-                <h2>Stay Updated</h2>
-                <p>Get notified when new distillations are published.</p>
-                <form id="newsletter-form" method="post" action="{% url 'subscribe' %}">
-                    {% csrf_token %}
-                    <input type="email" name="email" placeholder="Enter your email" required>
-                    <button type="submit">Subscribe</button>
-                </form>
-                <div id="newsletter-message"></div>
-            </div>
-        </div>
-    </footer>
-    
-    <script src="{% static 'blog/js/filters.js' %}"></script>
-    {% block extra_js %}{% endblock %}
+<div class="page-wrapper">
+<!-- NAV -->
+<nav class="site-nav">
+    <a class="nav-brand" href="{% url 'home' %}">
+        <span class="nav-title">Notes in the Margin</span>
+        <span class="nav-dot"></span>
+    </a>
+    <ul class="nav-links">
+        <li><a href="{% url 'home' %}">Home</a></li>
+        <li><a href="{% url 'library' %}">Library</a></li>
+    </ul>
+</nav>
+
+<main class="main-grow">
+{% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <span class="footer-brand">Notes in the Margin <span class="footer-dot">•</span></span>
+    <span class="footer-note">A library, not a feed.</span>
+</footer>
+</div>
+
+<script src="{% static 'blog/js/filters.js' %}"></script>
+{% block extra_js %}{% endblock %}
 </body>
 </html>
-
