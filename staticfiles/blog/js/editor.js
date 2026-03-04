@@ -1,5 +1,7 @@
 // Editor functionality - auto-save, points management, reference pane
 
+const WORTH_STEALING_TEXT_MAX = 500;
+
 document.addEventListener('DOMContentLoaded', function() {
     const postForm = document.getElementById('post-form');
     const pointsContainer = document.getElementById('points-container');
@@ -23,6 +25,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 addPoint();
             }
         }
+        // Set initial character counters for all point textareas
+        pointsContainer.querySelectorAll('.point-text-input').forEach(function(ta) {
+            updatePointCharCount(ta);
+        });
     }
     
     // Add point
@@ -49,10 +55,13 @@ document.addEventListener('DOMContentLoaded', function() {
             <textarea class="point-text-input" 
                       placeholder="Point description"
                       rows="3"
-                      data-point-field="text"></textarea>
+                      data-point-field="text"
+                      maxlength="${WORTH_STEALING_TEXT_MAX}"></textarea>
+            <div class="point-char-count" aria-live="polite"><span class="point-char-remaining">${WORTH_STEALING_TEXT_MAX}</span> characters remaining</div>
         `;
         pointsContainer.appendChild(pointDiv);
         updatePointNumbers();
+        updatePointCharCount(pointDiv.querySelector('.point-text-input'));
     }
     
     // Remove point
@@ -64,6 +73,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     };
     
+    // Update "characters remaining" for one Worth Stealing point
+    function updatePointCharCount(textarea) {
+        if (!textarea) return;
+        const pointEditor = textarea.closest('.point-editor');
+        const remainingEl = pointEditor?.querySelector('.point-char-remaining');
+        if (!remainingEl) return;
+        const len = (textarea.value || '').length;
+        const remaining = Math.max(0, WORTH_STEALING_TEXT_MAX - len);
+        remainingEl.textContent = remaining;
+        const countDiv = pointEditor.querySelector('.point-char-count');
+        if (countDiv) {
+            countDiv.classList.toggle('char-count-warning', remaining <= 50);
+            countDiv.classList.toggle('char-count-zero', remaining === 0);
+        }
+    }
+
     // Update point numbers
     function updatePointNumbers() {
         const points = pointsContainer.querySelectorAll('.point-editor');
@@ -134,10 +159,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     saveIndicator.classList.remove('saved');
                 }, 2000);
                 
-                // Update post ID if this was a new post
+                // If autosave created a new post, switch form to edit that post so Save doesn't create a duplicate
                 if (!postId && data.post_id) {
                     postId = data.post_id;
                     autosaveUrl = `/write/autosave/${postId}/`;
+                    const form = document.getElementById('post-form');
+                    if (form) {
+                        form.action = `/write/post/${postId}/`;
+                    }
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState(null, '', `/write/post/${postId}/`);
+                    }
                 }
             }
         })
@@ -175,20 +207,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Reference pane functionality
-    const sidebarPosts = document.querySelectorAll('.sidebar-post-item');
-    sidebarPosts.forEach(postItem => {
-        postItem.addEventListener('click', function() {
-            const postId = this.getAttribute('data-post-id');
-            // In a real implementation, you'd fetch the post content via AJAX
-            // For now, we'll just show the pane
-            referencePane.style.display = 'block';
-            document.getElementById('reference-content').innerHTML = `
-                <h4>${this.querySelector('h4').textContent}</h4>
-                <p class="post-meta-small">${this.querySelector('.post-meta-small').textContent}</p>
-                <p>${this.querySelector('.post-excerpt').textContent}</p>
-                <p><em>Full reference view would load here via AJAX</em></p>
-            `;
+    // Reference pane: load full post content via AJAX when a sidebar post is clicked
+    const referenceContent = document.getElementById('reference-content');
+    document.getElementById('posts-list')?.addEventListener('click', function(e) {
+        const postItem = e.target.closest('.sidebar-post-item');
+        if (!postItem) return;
+        const url = postItem.getAttribute('data-reference-url');
+        if (!url) return;
+        referencePane.style.display = 'block';
+        referenceContent.innerHTML = '<p class="reference-loading">Loading…</p>';
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+            referenceContent.innerHTML = html;
+        })
+        .catch(function() {
+            referenceContent.innerHTML = '<p class="reference-error">Could not load reference.</p>';
         });
     });
     
@@ -286,6 +322,15 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
+    // Worth Stealing character counter: update on input
+    if (pointsContainer) {
+        pointsContainer.addEventListener('input', function(e) {
+            if (e.target.classList.contains('point-text-input')) {
+                updatePointCharCount(e.target);
+            }
+        });
+    }
+
     // Initialize
     if (addPointBtn) {
         addPointBtn.addEventListener('click', addPoint);

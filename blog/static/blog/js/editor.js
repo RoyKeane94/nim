@@ -159,10 +159,17 @@ document.addEventListener('DOMContentLoaded', function() {
                     saveIndicator.classList.remove('saved');
                 }, 2000);
                 
-                // Update post ID if this was a new post
+                // If autosave created a new post, switch form to edit that post so Save doesn't create a duplicate
                 if (!postId && data.post_id) {
                     postId = data.post_id;
                     autosaveUrl = `/write/autosave/${postId}/`;
+                    const form = document.getElementById('post-form');
+                    if (form) {
+                        form.action = `/write/post/${postId}/`;
+                    }
+                    if (window.history && window.history.replaceState) {
+                        window.history.replaceState(null, '', `/write/post/${postId}/`);
+                    }
                 }
             }
         })
@@ -200,20 +207,24 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Reference pane functionality
-    const sidebarPosts = document.querySelectorAll('.sidebar-post-item');
-    sidebarPosts.forEach(postItem => {
-        postItem.addEventListener('click', function() {
-            const postId = this.getAttribute('data-post-id');
-            // In a real implementation, you'd fetch the post content via AJAX
-            // For now, we'll just show the pane
-            referencePane.style.display = 'block';
-            document.getElementById('reference-content').innerHTML = `
-                <h4>${this.querySelector('h4').textContent}</h4>
-                <p class="post-meta-small">${this.querySelector('.post-meta-small').textContent}</p>
-                <p>${this.querySelector('.post-excerpt').textContent}</p>
-                <p><em>Full reference view would load here via AJAX</em></p>
-            `;
+    // Reference pane: load full post content via AJAX when a sidebar post is clicked
+    const referenceContent = document.getElementById('reference-content');
+    document.getElementById('posts-list')?.addEventListener('click', function(e) {
+        const postItem = e.target.closest('.sidebar-post-item');
+        if (!postItem) return;
+        const url = postItem.getAttribute('data-reference-url');
+        if (!url) return;
+        referencePane.style.display = 'block';
+        referenceContent.innerHTML = '<p class="reference-loading">Loading…</p>';
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(r) { return r.text(); })
+        .then(function(html) {
+            referenceContent.innerHTML = html;
+        })
+        .catch(function() {
+            referenceContent.innerHTML = '<p class="reference-error">Could not load reference.</p>';
         });
     });
     

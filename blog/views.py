@@ -252,6 +252,24 @@ def post_editor(request, post_id=None):
 
 
 @superuser_required
+def post_reference(request, post_id):
+    """Return HTML fragment for the reference pane (AJAX)."""
+    post = get_object_or_404(Post, pk=post_id)
+    try:
+        commentary_html = markdown2.markdown(
+            post.commentary,
+            extras=['fenced-code-blocks', 'code-friendly']
+        )
+    except Exception:
+        commentary_html = post.commentary.replace('\n', '<br>')
+    context = {
+        'post': post,
+        'commentary_html': commentary_html,
+    }
+    return render(request, 'blog/write/reference_fragment.html', context)
+
+
+@superuser_required
 def post_preview(request, post_id):
     """Preview how post will look when published"""
     post = get_object_or_404(Post, pk=post_id)
@@ -297,6 +315,15 @@ def post_unpublish(request, post_id):
 
 @superuser_required
 @require_http_methods(["POST"])
+def post_delete(request, post_id):
+    """Delete a post (draft or published)."""
+    post = get_object_or_404(Post, pk=post_id)
+    post.delete()
+    return redirect('write_dashboard')
+
+
+@superuser_required
+@require_http_methods(["POST"])
 def autosave(request, post_id=None):
     """Auto-save endpoint for AJAX"""
     try:
@@ -305,12 +332,23 @@ def autosave(request, post_id=None):
         if post_id:
             post = get_object_or_404(Post, pk=post_id)
         else:
-            # Create new post with minimal required fields
-            post = Post()
-            # Set defaults if creating new
+            # Create new post only when we have required fields (frontend will then set form action so Save updates this post)
             if not data.get('title'):
                 return JsonResponse({'success': False, 'error': 'Title required for new post'}, status=400)
-        
+            author_id = data.get('author_id')
+            book_id = data.get('book_id')
+            if not author_id or not book_id:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Choose Author and Book/Source before auto-save can create a draft.'
+                }, status=400)
+            post = Post()
+            post.title = data.get('title', '') or 'Untitled'
+            post.publish_date = data.get('publish_date') or timezone.now().date().isoformat()
+            post.author_id = int(author_id)
+            post.book_id = int(book_id)
+            post.commentary = data.get('commentary') or ''
+
         # Update post fields
         if 'title' in data and data['title']:
             post.title = data['title']

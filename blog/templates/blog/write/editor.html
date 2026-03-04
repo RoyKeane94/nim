@@ -12,7 +12,7 @@
             </div>
             <div class="sidebar-posts" id="posts-list">
                 {% for prev_post in all_posts %}
-                <div class="sidebar-post-item" data-post-id="{{ prev_post.id }}">
+                <div class="sidebar-post-item" data-post-id="{{ prev_post.id }}" data-reference-url="{% url 'post_reference' prev_post.id %}">
                     <h4>{{ prev_post.title|default:"Untitled" }}</h4>
                     <p class="post-meta-small">{{ prev_post.book.title }}</p>
                     <p class="post-excerpt">{{ prev_post.commentary|truncatewords:15 }}</p>
@@ -45,7 +45,7 @@
                 </div>
             </div>
             
-            <form method="post" id="post-form" class="post-form">
+            <form method="post" id="post-form" class="post-form" {% if post %}action="{% url 'post_editor' post.id %}"{% endif %}>
                 {% csrf_token %}
                 
                 <div class="form-section">

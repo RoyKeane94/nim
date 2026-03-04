@@ -803,6 +803,14 @@ body {
     color: var(--accent-hover);
 }
 
+.btn-link-danger {
+    color: #b91c1c;
+}
+
+.btn-link-danger:hover {
+    color: #991b1b;
+}
+
 /* Editor */
 .editor-container {
     padding: 20px 0;
@@ -1120,6 +1128,20 @@ textarea.form-control {
     resize: vertical;
 }
 
+.point-char-count {
+    font-size: 0.8rem;
+    color: var(--meta-color, #6b7280);
+    margin-top: 4px;
+}
+
+.point-char-count.char-count-warning {
+    color: #b45309;
+}
+
+.point-char-count.char-count-zero {
+    color: #b91c1c;
+}
+
 /* Buttons */
 .btn {
     padding: 10px 20px;
@@ -1276,6 +1298,25 @@ textarea.form-control {
 .reference-content {
     font-size: 0.9rem;
     line-height: 1.7;
+}
+
+.reference-content .reference-loading,
+.reference-content .reference-error {
+    color: var(--meta-color);
+    font-style: italic;
+}
+
+.reference-content .reference-fragment .reference-title {
+    margin-bottom: 0.5rem;
+}
+
+.reference-content .reference-points,
+.reference-content .reference-commentary {
+    margin-top: 1rem;
+}
+
+.reference-content .reference-commentary-body {
+    margin-top: 0.5rem;
 }
 
 /* Field with button */

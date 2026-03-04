@@ -1,0 +1,25 @@
+{% load static %}
+<div class="reference-fragment">
+    <h4 class="reference-title">{{ post.title|default:"Untitled" }}</h4>
+    <p class="post-meta-small">{{ post.book.title }}{% if post.book.author %} · {{ post.book.author.name }}{% endif %}</p>
+    <p class="post-meta-small">{{ post.publish_date|date:"d M Y" }}{% if post.series_order %} · Ch. {{ post.series_order }}{% endif %}</p>
+    {% if post.points %}
+    <div class="reference-points">
+        <strong>Worth Stealing</strong>
+        <ul>
+            {% for point in post.points %}
+            {% if point.title or point.text %}
+            <li>
+                {% if point.title %}<strong>{{ point.title }}</strong><br>{% endif %}
+                {{ point.text|truncatewords:30 }}
+            </li>
+            {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <div class="reference-commentary">
+        <strong>Commentary</strong>
+        <div class="reference-commentary-body">{{ commentary_html|safe }}</div>
+    </div>
+</div>

@@ -70,6 +70,10 @@
                             <button type="submit" class="btn-link">Publish</button>
                         </form>
                         {% endif %}
+                        <form method="post" action="{% url 'post_delete' post.id %}" style="display:inline;" class="form-delete-post" onsubmit="return confirm('Delete this post? This cannot be undone.');">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-link btn-link-danger">Delete</button>
+                        </form>
                     </td>
                 </tr>
                 {% empty %}
