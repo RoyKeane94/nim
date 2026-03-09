@@ -265,3 +265,133 @@ INFO 2026-03-04 19:46:01,016 log "GET /write/post/2/ HTTP/1.1" 200 33315
 INFO 2026-03-04 19:46:11,935 log "POST /write/autosave/2/ HTTP/1.1" 200 79
 INFO 2026-03-04 19:46:15,541 log "POST /write/autosave/2/ HTTP/1.1" 200 79
 INFO 2026-03-04 20:00:35,385 autoreload Watching for file changes with StatReloader
+INFO 2026-03-09 22:05:11,187 autoreload Watching for file changes with StatReloader
+INFO 2026-03-09 22:05:14,955 log "GET / HTTP/1.1" 200 3083
+INFO 2026-03-09 22:05:14,989 log "GET /static/blog/css/home.css HTTP/1.1" 200 11017
+INFO 2026-03-09 22:05:14,989 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-03-09 22:05:15,328 log "GET /static/blog/favicon.png HTTP/1.1" 200 215033
+INFO 2026-03-09 22:05:43,204 log "GET /library/ HTTP/1.1" 200 2197
+INFO 2026-03-09 22:05:50,821 log "GET / HTTP/1.1" 200 3083
+INFO 2026-03-09 22:05:53,751 log "GET /write HTTP/1.1" 301 0
+INFO 2026-03-09 22:05:53,754 log "GET /write/ HTTP/1.1" 302 0
+INFO 2026-03-09 22:05:53,757 log "GET /write/login/ HTTP/1.1" 200 1146
+INFO 2026-03-09 22:05:53,773 log "GET /static/blog/css/style.css HTTP/1.1" 200 26791
+INFO 2026-03-09 22:09:06,334 log "GET / HTTP/1.1" 200 3083
+INFO 2026-03-09 22:09:26,090 autoreload Watching for file changes with StatReloader
+INFO 2026-03-09 22:09:27,845 log "GET / HTTP/1.1" 200 3083
+INFO 2026-03-09 22:10:04,280 log "GET /write/ HTTP/1.1" 302 0
+INFO 2026-03-09 22:10:04,285 log "GET /write/login/ HTTP/1.1" 200 1146
+INFO 2026-03-09 22:10:09,921 log "POST /write/login/ HTTP/1.1" 302 0
+INFO 2026-03-09 22:10:09,930 log "GET /write/ HTTP/1.1" 200 5156
+INFO 2026-03-09 22:10:09,950 log "GET /static/blog/js/editor.js HTTP/1.1" 200 14146
+INFO 2026-03-09 22:10:11,818 log "GET /write/post/2/ HTTP/1.1" 200 33429
+INFO 2026-03-09 22:10:15,667 log "POST /write/autosave/2/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:10:19,958 log "POST /write/autosave/2/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:10:23,260 log "POST /write/autosave/2/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:10:25,740 log "POST /write/autosave/2/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:10:25,910 log "POST /write/autosave/2/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:10:28,818 log "POST /write/post/2/publish/ HTTP/1.1" 302 0
+INFO 2026-03-09 22:10:28,828 log "GET /write/ HTTP/1.1" 200 5168
+INFO 2026-03-09 22:10:31,387 log "GET / HTTP/1.1" 200 4068
+INFO 2026-03-09 22:10:39,634 log "GET /post/wdf-1/ HTTP/1.1" 200 3807
+INFO 2026-03-09 22:10:42,799 log "GET /post/wdf-1/ HTTP/1.1" 200 3807
+INFO 2026-03-09 22:11:38,646 log "GET / HTTP/1.1" 200 4068
+INFO 2026-03-09 22:11:40,818 log "GET /write/ HTTP/1.1" 200 5168
+INFO 2026-03-09 22:11:42,441 log "GET /write/post/new/ HTTP/1.1" 200 32841
+WARNING 2026-03-09 22:11:48,386 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:11:48,386 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:11:48,836 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:11:48,840 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:11:51,179 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:11:51,180 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:11:53,844 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:11:53,844 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:04,963 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:04,964 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:06,234 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:06,235 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:12,461 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:12,462 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:13,644 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:13,644 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:15,233 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:15,234 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:23,309 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:23,310 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:24,233 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:24,233 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:31,271 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:31,272 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:35,717 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:35,718 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:37,607 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:37,608 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:39,420 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:39,422 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:40,869 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:40,870 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:42,457 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:42,458 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:42,866 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:42,867 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:47,502 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:47,503 log "POST /write/autosave/ HTTP/1.1" 400 97
+INFO 2026-03-09 22:12:47,564 log "POST /write/create-author/ HTTP/1.1" 200 102
+WARNING 2026-03-09 22:12:48,668 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:48,669 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:12:54,851 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:12:54,852 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:13:00,153 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:13:00,154 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:13:01,071 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:13:01,072 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:13:01,984 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:13:01,985 log "POST /write/autosave/ HTTP/1.1" 400 97
+WARNING 2026-03-09 22:13:07,361 log Bad Request: /write/autosave/
+WARNING 2026-03-09 22:13:07,362 log "POST /write/autosave/ HTTP/1.1" 400 97
+INFO 2026-03-09 22:13:07,427 log "POST /write/create-book/ HTTP/1.1" 200 107
+INFO 2026-03-09 22:13:08,076 log "POST /write/autosave/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:13:09,101 log "POST /write/autosave/3/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:13:11,105 log "POST /write/autosave/3/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:13:12,458 log "POST /write/autosave/3/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:13:14,490 log "POST /write/autosave/3/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:13:14,562 log "POST /write/create-guest/ HTTP/1.1" 200 87
+INFO 2026-03-09 22:13:15,258 log "POST /write/autosave/3/ HTTP/1.1" 200 79
+INFO 2026-03-09 22:13:17,078 log "POST /write/post/3/ HTTP/1.1" 302 0
+INFO 2026-03-09 22:13:17,083 log "GET /write/ HTTP/1.1" 200 6905
+INFO 2026-03-09 22:13:18,925 log "GET /write/post/3/ HTTP/1.1" 200 36324
+INFO 2026-03-09 22:13:20,280 log "POST /write/post/3/publish/ HTTP/1.1" 302 0
+INFO 2026-03-09 22:13:20,294 log "GET /write/ HTTP/1.1" 200 6917
+INFO 2026-03-09 22:13:22,880 log "GET / HTTP/1.1" 200 6134
+INFO 2026-03-09 22:13:27,143 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5683
+INFO 2026-03-09 22:13:34,929 log "GET /series/private-markets/ HTTP/1.1" 200 2626
+INFO 2026-03-09 22:14:39,063 log "GET /post/wdf-1/ HTTP/1.1" 200 3895
+INFO 2026-03-09 22:14:42,808 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5683
+INFO 2026-03-09 22:14:53,376 log "GET / HTTP/1.1" 200 6134
+INFO 2026-03-09 22:16:57,789 log "GET /library/ HTTP/1.1" 200 3775
+INFO 2026-03-09 22:17:01,814 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
+INFO 2026-03-09 22:17:21,351 autoreload Watching for file changes with StatReloader
+INFO 2026-03-09 22:17:30,244 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
+INFO 2026-03-09 22:17:30,261 log "GET /static/blog/css/home.css HTTP/1.1" 200 13891
+INFO 2026-03-09 22:17:30,262 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-03-09 22:17:30,324 log "GET /static/blog/favicon.png HTTP/1.1" 200 215033
+INFO 2026-03-09 22:17:50,070 log "GET /series/private-markets/ HTTP/1.1" 200 2626
+INFO 2026-03-09 22:17:50,083 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-09 22:18:02,188 log "GET / HTTP/1.1" 200 5833
+INFO 2026-03-09 22:18:02,201 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-09 22:18:23,080 log "GET /write HTTP/1.1" 301 0
+INFO 2026-03-09 22:18:23,094 log "GET /write/ HTTP/1.1" 200 6917
+INFO 2026-03-09 22:18:23,111 log "GET /static/blog/js/editor.js HTTP/1.1" 200 14146
+INFO 2026-03-09 22:18:23,111 log "GET /static/blog/css/style.css HTTP/1.1" 200 26791
+INFO 2026-03-09 22:18:27,288 log "GET /write/post/3/ HTTP/1.1" 200 36330
+INFO 2026-03-09 22:18:51,555 log "GET / HTTP/1.1" 200 5833
+INFO 2026-03-09 22:18:51,574 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-09 22:19:11,105 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
+INFO 2026-03-09 22:19:11,118 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-09 22:20:12,248 autoreload Watching for file changes with StatReloader
+INFO 2026-03-09 22:20:15,562 log "GET /series/private-markets/ HTTP/1.1" 200 2924
+INFO 2026-03-09 22:20:15,585 log "GET /static/blog/css/home.css HTTP/1.1" 200 16847
+INFO 2026-03-09 22:20:22,457 log "GET / HTTP/1.1" 200 5833
+INFO 2026-03-09 22:20:22,468 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-09 22:20:26,256 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
+INFO 2026-03-09 22:20:26,269 log "GET /static/blog/css/home.css HTTP/1.1" 304 0

@@ -18,7 +18,13 @@
         <header class="article-header">
             <div class="article-date">{{ post.publish_date|date:"d M Y"|upper }}</div>
             <h1 class="article-title">{{ post.title }}</h1>
-            <p class="article-source">Inspired by {{ post.author.name }} × {{ post.book.title }}</p>
+            <p class="article-source">
+            {% if post.book.source_type == 'podcast' %}
+              Inspired by {% for g in post.guests.all %}<strong>{{ g.name }}</strong>{% if not forloop.last %}, {% endif %}{% empty %}this episode{% endfor %}{% if post.guests.exists %} on {% endif %}<a href="{% url 'series' post.book.slug %}">{{ post.book.title }}</a>
+            {% else %}
+              Inspired by <strong>{{ post.author.name }}</strong> × <a href="{% url 'series' post.book.slug %}">{{ post.book.title }}</a>
+            {% endif %}
+        </p>
         </header>
         
         <section class="worth-stealing">
@@ -43,19 +49,23 @@
         </section>
         
         <section class="commentary">
-            <div class="commentary-label">MY COMMENTARY</div>
+            <h2 class="commentary-label">My Thoughts</h2>
             <div class="commentary-content">
                 {{ commentary_html|safe }}
             </div>
         </section>
     </article>
     
-    <nav class="post-navigation">
+    <nav class="post-navigation" aria-label="Post navigation">
         {% if prev_post %}
-        <a href="{% url 'post_detail' prev_post.slug %}" class="nav-link prev">← Previous Post</a>
+        <a href="{% url 'post_detail' prev_post.slug %}" class="nav-link nav-link-prev">← Previous post</a>
+        {% else %}
+        <span class="nav-link-placeholder"></span>
         {% endif %}
         {% if next_post %}
-        <a href="{% url 'post_detail' next_post.slug %}" class="nav-link next">Next Post →</a>
+        <a href="{% url 'post_detail' next_post.slug %}" class="nav-link nav-link-next">Next post →</a>
+        {% else %}
+        <span class="nav-link-placeholder"></span>
         {% endif %}
     </nav>
 </div>

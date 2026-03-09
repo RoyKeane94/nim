@@ -4,6 +4,11 @@
 
 {% block content %}
 <div class="container series-container">
+    <nav class="breadcrumb">
+        <a href="{% url 'home' %}">Home</a>
+        <span class="separator">/</span>
+        <span>{{ book.title }}</span>
+    </nav>
     <div class="series-header">
         <div class="bookmark-ribbon"></div>
         <h1 class="book-title">{{ book.title }}</h1>
@@ -38,14 +43,18 @@
         {% endfor %}
     </div>
     
-    <div class="series-navigation">
+    <nav class="series-navigation" aria-label="Series navigation">
         {% if prev_series %}
-        <a href="{% url 'series' prev_series.slug %}" class="nav-link prev">← Previous Series</a>
+        <a href="{% url 'series' prev_series.slug %}" class="nav-link nav-link-prev">← Previous series</a>
+        {% else %}
+        <span class="nav-link-placeholder"></span>
         {% endif %}
         {% if next_series %}
-        <a href="{% url 'series' next_series.slug %}" class="nav-link next">Next Series →</a>
+        <a href="{% url 'series' next_series.slug %}" class="nav-link nav-link-next">Next series →</a>
+        {% else %}
+        <span class="nav-link-placeholder"></span>
         {% endif %}
-    </div>
+    </nav>
 </div>
 {% endblock %}
 
