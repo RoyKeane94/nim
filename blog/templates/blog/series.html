@@ -12,7 +12,9 @@
     <div class="series-header">
         <div class="bookmark-ribbon"></div>
         <h1 class="book-title">{{ book.title }}</h1>
+        {% if book.source_type != 'podcast' and book.author %}
         <p class="book-author">by {{ book.author.name }}</p>
+        {% endif %}
         <p class="book-description">{{ book.description }}</p>
         
         <div class="series-stats">
