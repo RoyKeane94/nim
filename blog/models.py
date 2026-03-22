@@ -72,7 +72,10 @@ class Book(models.Model):
     
     title = models.CharField(max_length=300)
     slug = models.SlugField(unique=True, blank=True, max_length=300)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='books')
+    # Optional for podcasts (show name is the show title; guests are per-episode on Post)
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name='books', null=True, blank=True
+    )
     description = models.TextField(blank=True)  # Italic description for series page
     source_type = models.CharField(max_length=50, choices=SOURCE_TYPES, default='book')
     is_series = models.BooleanField(default=False)  # Can have multiple posts
@@ -100,7 +103,10 @@ class Book(models.Model):
 class Post(models.Model):
     title = models.CharField(max_length=300)
     slug = models.SlugField(unique=True, blank=True, max_length=300)
-    author = models.ForeignKey(Author, on_delete=models.CASCADE, related_name='posts')
+    # Optional when the source is a podcast (writer / byline not used the same way)
+    author = models.ForeignKey(
+        Author, on_delete=models.CASCADE, related_name='posts', null=True, blank=True
+    )
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='posts')
     
     # For series posts (e.g., Chapter 3)

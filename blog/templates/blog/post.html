@@ -22,7 +22,7 @@
             {% if post.book.source_type == 'podcast' %}
               Inspired by {% for g in post.guests.all %}<strong>{{ g.name }}</strong>{% if not forloop.last %}, {% endif %}{% empty %}this episode{% endfor %}{% if post.guests.exists %} on {% endif %}<a href="{% url 'series' post.book.slug %}">{{ post.book.title }}</a>
             {% else %}
-              Inspired by <strong>{{ post.author.name }}</strong> × <a href="{% url 'series' post.book.slug %}">{{ post.book.title }}</a>
+              Inspired by {% if post.author %}<strong>{{ post.author.name }}</strong> × {% endif %}<a href="{% url 'series' post.book.slug %}">{{ post.book.title }}</a>
             {% endif %}
         </p>
         </header>

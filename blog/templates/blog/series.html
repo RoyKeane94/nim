@@ -18,7 +18,7 @@
         <p class="book-description">{{ book.description }}</p>
         
         <div class="series-stats">
-            <span class="stat">{{ book.get_chapters_count }} chapters covered</span>
+            <span class="stat">{{ book.get_chapters_count }} chapter{{ book.get_chapters_count|pluralize }} covered</span>
             <span class="stat-separator">·</span>
             <span class="stat">{{ book.get_status_display }}</span>
         </div>

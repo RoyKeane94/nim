@@ -1,4 +1,5 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from .models import Post, Author, Book, NewsletterSubscriber, Tag, Guest
 
 
@@ -55,6 +56,16 @@ class PostForm(forms.ModelForm):
         if 'tags' in self.fields:
             self.fields['tags'].queryset = Tag.objects.all().order_by('name')
             self.fields['tags'].required = False
+        if 'author' in self.fields:
+            self.fields['author'].required = False
+
+    def clean(self):
+        cleaned = super().clean()
+        book = cleaned.get('book')
+        author = cleaned.get('author')
+        if book and getattr(book, 'source_type', None) != 'podcast' and not author:
+            raise ValidationError({'author': 'Author is required for book and non-podcast sources.'})
+        return cleaned
 
 
 class NewsletterForm(forms.ModelForm):
@@ -133,4 +144,16 @@ class BookForm(forms.ModelForm):
                 'class': 'form-control'
             }),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['author'].required = False
+
+    def clean(self):
+        cleaned = super().clean()
+        st = cleaned.get('source_type')
+        author = cleaned.get('author')
+        if st != 'podcast' and not author:
+            raise ValidationError({'author': 'Author is required unless the source is a podcast.'})
+        return cleaned
 

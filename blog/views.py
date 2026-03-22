@@ -71,37 +71,69 @@ def home(request):
 
 
 def archive(request):
-    """Archive page with filters"""
-    posts = Post.objects.filter(is_published=True).order_by('-publish_date')
-    authors = Author.objects.filter(posts__is_published=True).distinct().order_by('name')
+    """Archive page with filters (book/source/podcast, topic, guest)."""
+    posts = (
+        Post.objects.filter(is_published=True)
+        .select_related('author', 'book')
+        .prefetch_related('guests', 'tags')
+        .order_by('-publish_date')
+    )
     books = Book.objects.filter(posts__is_published=True).distinct().order_by('title')
-    
-    # Get filter parameters
-    author_filter = request.GET.get('author')
+    tags = Tag.objects.filter(posts__is_published=True).distinct().order_by('name')
+    guests = Guest.objects.filter(posts__is_published=True).distinct().order_by('name')
+
     book_filter = request.GET.get('book')
+    tag_filter = request.GET.get('tag')
+    guest_filter = request.GET.get('guest')
     tab = request.GET.get('tab', 'recent')
-    
-    # Apply filters
-    if author_filter:
-        posts = posts.filter(author__slug=author_filter)
+
     if book_filter:
         posts = posts.filter(book__slug=book_filter)
-    
-    # Tab filtering
+    if tag_filter:
+        posts = posts.filter(tags__slug=tag_filter).distinct()
+    if guest_filter:
+        posts = posts.filter(guests__slug=guest_filter).distinct()
+
+    # Tab: 'archive' = full library list (same filters); 'recent' = default
     if tab == 'archive':
-        # All posts (already filtered)
         pass
-    elif tab == 'authors':
-        # Group by author - this would need custom logic
-        pass
-    
+
+    # Labels for dropdown triggers (current selection text)
+    book_label = 'All'
+    if book_filter:
+        b = Book.objects.filter(slug=book_filter).first()
+        book_label = b.title if b else book_filter
+    tag_label = 'All'
+    if tag_filter:
+        t = Tag.objects.filter(slug=tag_filter).first()
+        tag_label = t.name if t else tag_filter
+    guest_label = 'All'
+    if guest_filter:
+        g = Guest.objects.filter(slug=guest_filter).first()
+        guest_label = g.name if g else guest_filter
+
+    summary_parts = []
+    if book_filter:
+        summary_parts.append(book_label)
+    if tag_filter:
+        summary_parts.append(tag_label)
+    if guest_filter:
+        summary_parts.append(guest_label)
+
     context = {
         'posts': posts,
-        'authors': authors,
         'books': books,
-        'active_author': author_filter,
+        'tags': tags,
+        'guests': guests,
         'active_book': book_filter,
+        'active_tag': tag_filter,
+        'active_guest': guest_filter,
         'active_tab': tab,
+        'filter_book_label': book_label,
+        'filter_tag_label': tag_label,
+        'filter_guest_label': guest_label,
+        'filter_summary_parts': summary_parts,
+        'has_active_filters': bool(summary_parts),
     }
     return render(request, 'blog/archive.html', context)
 
@@ -337,15 +369,27 @@ def autosave(request, post_id=None):
                 return JsonResponse({'success': False, 'error': 'Title required for new post'}, status=400)
             author_id = data.get('author_id')
             book_id = data.get('book_id')
-            if not author_id or not book_id:
+            if not book_id:
                 return JsonResponse({
                     'success': False,
-                    'error': 'Choose Author and Book/Source before auto-save can create a draft.'
+                    'error': 'Choose Book/Source before auto-save can create a draft.'
+                }, status=400)
+            try:
+                book = Book.objects.get(pk=int(book_id))
+            except (ValueError, TypeError, Book.DoesNotExist):
+                return JsonResponse({'success': False, 'error': 'Invalid book/source.'}, status=400)
+            if book.source_type != 'podcast' and not author_id:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Choose an author for non-podcast sources before auto-save can create a draft.'
                 }, status=400)
             post = Post()
             post.title = data.get('title', '') or 'Untitled'
             post.publish_date = data.get('publish_date') or timezone.now().date().isoformat()
-            post.author_id = int(author_id)
+            if author_id:
+                post.author_id = int(author_id)
+            else:
+                post.author_id = None
             post.book_id = int(book_id)
             post.commentary = data.get('commentary') or ''
 
@@ -354,11 +398,14 @@ def autosave(request, post_id=None):
             post.title = data['title']
         if 'publish_date' in data and data['publish_date']:
             post.publish_date = data['publish_date']
-        if 'author_id' in data and data['author_id']:
-            try:
-                post.author_id = int(data['author_id'])
-            except (ValueError, TypeError):
-                pass
+        if 'author_id' in data:
+            if data['author_id']:
+                try:
+                    post.author_id = int(data['author_id'])
+                except (ValueError, TypeError):
+                    pass
+            else:
+                post.author_id = None
         if 'book_id' in data and data['book_id']:
             try:
                 post.book_id = int(data['book_id'])
@@ -432,6 +479,8 @@ def create_book(request):
     """Create a new book via AJAX"""
     try:
         data = json.loads(request.body)
+        if data.get('source_type') == 'podcast' and not data.get('author'):
+            data['author'] = None
         form = BookForm(data)
         if form.is_valid():
             book = form.save()

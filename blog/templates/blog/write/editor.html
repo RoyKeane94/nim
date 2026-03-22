@@ -89,8 +89,9 @@
                                 </select>
                                 <label class="quick-form-label">Title</label>
                                 <input type="text" id="book-quick-title" class="form-control" placeholder="Enter title" style="margin-top: 4px;" onkeypress="if(event.key==='Enter'){event.preventDefault();createBookQuick();}">
-                                <label class="quick-form-label">Author</label>
+                                <label class="quick-form-label" id="book-quick-author-label">Author</label>
                                 <select id="book-quick-author" class="form-control" style="margin-top: 4px;">
+                                    <option value="">— Not needed for podcasts —</option>
                                     {% for author in authors %}
                                     <option value="{{ author.id }}">{{ author.name }}</option>
                                     {% endfor %}
@@ -234,6 +235,7 @@
         const form = document.getElementById('book-quick-form');
         if (form.style.display === 'none') {
             form.style.display = 'block';
+            syncBookQuickAuthorVisibility();
             document.getElementById('book-quick-title').focus();
         } else {
             form.style.display = 'none';
@@ -365,12 +367,23 @@
         .catch(err => { console.error(err); alert('An error occurred'); });
     }
     
+    function syncBookQuickAuthorVisibility() {
+        const sourceTypeSelect = document.getElementById('book-quick-source-type');
+        const label = document.getElementById('book-quick-author-label');
+        const authorSelect = document.getElementById('book-quick-author');
+        const st = sourceTypeSelect ? sourceTypeSelect.value : 'book';
+        const isPodcast = st === 'podcast';
+        if (label) label.style.display = isPodcast ? 'none' : 'block';
+        if (authorSelect) authorSelect.style.display = isPodcast ? 'none' : 'block';
+    }
+    document.getElementById('book-quick-source-type')?.addEventListener('change', syncBookQuickAuthorVisibility);
+    
     function createBookQuick() {
         const titleInput = document.getElementById('book-quick-title');
         const authorSelect = document.getElementById('book-quick-author');
         const sourceTypeSelect = document.getElementById('book-quick-source-type');
         const title = titleInput.value.trim();
-        const authorId = parseInt(authorSelect.value);
+        const authorRaw = authorSelect ? authorSelect.value : '';
         const sourceType = sourceTypeSelect ? sourceTypeSelect.value : 'book';
         
         if (!title) {
@@ -378,9 +391,22 @@
             return;
         }
         
-        if (!authorId) {
-            alert('Please select an author');
+        if (sourceType !== 'podcast' && !authorRaw) {
+            alert('Please select an author for books and other sources');
             return;
+        }
+        
+        const payload = {
+            title: title,
+            description: '',
+            source_type: sourceType,
+            status: 'in_progress',
+            is_series: false
+        };
+        if (sourceType !== 'podcast' && authorRaw) {
+            payload.author = parseInt(authorRaw, 10);
+        } else {
+            payload.author = null;
         }
         
         fetch(window.createBookUrl, {
@@ -389,14 +415,7 @@
                 'Content-Type': 'application/json',
                 'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
             },
-            body: JSON.stringify({
-                title: title,
-                author: authorId,
-                description: '',
-                source_type: sourceType,
-                status: 'in_progress',
-                is_series: false
-            })
+            body: JSON.stringify(payload)
         })
         .then(response => response.json())
         .then(data => {

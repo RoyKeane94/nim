@@ -29,7 +29,7 @@
         {% if post.book.source_type == 'podcast' %}
           Inspired by {% for g in post.guests.all %}<strong>{{ g.name }}</strong>{% if not forloop.last %}, {% endif %}{% empty %}this episode{% endfor %}{% if post.guests.exists %} on {% endif %}<em>{{ post.book.title }}</em>
         {% else %}
-          Inspired by <strong>{{ post.author.name }}</strong> × <em>{{ post.book.title }}</em>
+          Inspired by {% if post.author %}<strong>{{ post.author.name }}</strong> × {% endif %}<em>{{ post.book.title }}</em>
         {% endif %}
       </p>
       {% if post.points %}
@@ -74,7 +74,7 @@
       {% for book in shelf_books %}
       <div class="shelf-item">
         <div class="shelf-book">{{ book.title }}</div>
-        <div class="shelf-author">{{ book.author.name }}</div>
+        {% if book.author %}<div class="shelf-author">{{ book.author.name }}</div>{% endif %}
         <div class="shelf-status">
           {% if book.status == 'in_progress' %}● In progress{% elif book.status == 'up_next' %}◎ Up next{% else %}✓ Done — post coming{% endif %}
         </div>

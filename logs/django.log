@@ -395,3 +395,31 @@ INFO 2026-03-09 22:20:22,457 log "GET / HTTP/1.1" 200 5833
 INFO 2026-03-09 22:20:22,468 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
 INFO 2026-03-09 22:20:26,256 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
 INFO 2026-03-09 22:20:26,269 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-22 14:30:34,848 autoreload Watching for file changes with StatReloader
+INFO 2026-03-22 14:30:40,149 log "GET / HTTP/1.1" 200 5833
+INFO 2026-03-22 14:30:40,172 log "GET /static/blog/js/filters.js HTTP/1.1" 200 1402
+INFO 2026-03-22 14:30:40,173 log "GET /static/blog/css/home.css HTTP/1.1" 200 16929
+INFO 2026-03-22 14:30:40,918 log "GET /static/blog/favicon.png HTTP/1.1" 200 215033
+INFO 2026-03-22 14:30:45,889 log "GET / HTTP/1.1" 200 5833
+INFO 2026-03-22 14:30:48,323 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
+INFO 2026-03-22 14:30:54,307 log "GET /library/ HTTP/1.1" 200 3788
+INFO 2026-03-22 14:35:04,841 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-22 14:35:05,201 autoreload Watching for file changes with StatReloader
+INFO 2026-03-22 14:35:48,780 autoreload /Users/tombarratt/Desktop/Coding_Projects/nim/nim/blog/views.py changed, reloading.
+INFO 2026-03-22 14:35:49,074 autoreload Watching for file changes with StatReloader
+INFO 2026-03-22 14:37:40,592 log "GET /library/ HTTP/1.1" 200 8682
+INFO 2026-03-22 14:37:40,639 log "GET /static/blog/css/home.css HTTP/1.1" 200 20384
+INFO 2026-03-22 14:37:56,850 log "GET /post/dan-sudenheim/ HTTP/1.1" 200 5880
+INFO 2026-03-22 14:37:56,868 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-22 14:38:50,993 log "GET /library/ HTTP/1.1" 200 8682
+INFO 2026-03-22 14:38:51,021 log "GET /static/blog/css/home.css HTTP/1.1" 200 20388
+INFO 2026-03-22 14:38:56,922 log "GET /library/ HTTP/1.1" 200 8682
+INFO 2026-03-22 14:38:56,960 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-22 14:39:55,911 log "GET /library/ HTTP/1.1" 200 8682
+INFO 2026-03-22 14:39:55,938 log "GET /static/blog/css/home.css HTTP/1.1" 200 20500
+INFO 2026-03-22 14:39:58,620 log "GET /library/?book=habits HTTP/1.1" 200 8523
+INFO 2026-03-22 14:39:58,634 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-22 14:40:00,964 log "GET /library/?book=habits&tag=log HTTP/1.1" 200 8247
+INFO 2026-03-22 14:40:00,974 log "GET /static/blog/css/home.css HTTP/1.1" 304 0
+INFO 2026-03-22 14:40:02,852 log "GET /library/?book=habits&tag=log&guest=dan-sudenheim HTTP/1.1" 200 8442
+INFO 2026-03-22 14:40:02,870 log "GET /static/blog/css/home.css HTTP/1.1" 304 0

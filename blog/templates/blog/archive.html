@@ -1,41 +1,78 @@
 {% extends 'blog/base.html' %}
+{% load archive_extras %}
 
 {% block title %}Library - Notes in the Margin{% endblock %}
 
 {% block content %}
 <div class="container archive-container">
     <div class="archive-tabs">
-        <a href="?tab=recent" class="tab {% if active_tab == 'recent' %}active{% endif %}">Recent</a>
-        <a href="?tab=archive" class="tab {% if active_tab == 'archive' %}active{% endif %}">Library</a>
-        <a href="?tab=authors" class="tab {% if active_tab == 'authors' %}active{% endif %}">Authors</a>
+        <a href="{% merge_query request tab='recent' %}" class="tab {% if active_tab == 'recent' %}active{% endif %}">Recent</a>
+        <a href="{% merge_query request tab='archive' %}" class="tab {% if active_tab == 'archive' %}active{% endif %}">Library</a>
     </div>
     
-    <div class="filters-section">
-        <div class="filter-group">
-            <h3>Filter by Author</h3>
-            <div class="filter-pills">
-                <a href="?" class="pill {% if not active_author %}active{% endif %}">All</a>
-                {% for author in authors %}
-                <a href="?author={{ author.slug }}{% if active_book %}&book={{ active_book }}{% endif %}" 
-                   class="pill {% if active_author == author.slug %}active{% endif %}">
-                    {{ author.name }}
-                </a>
-                {% endfor %}
+    <div class="library-filters filters-section">
+        <div class="library-filters__row">
+            <div class="filter-dropdown" data-filter-dropdown>
+                <div class="filter-dropdown__label">Filter by book / source / podcast</div>
+                <div class="filter-dropdown__wrap">
+                    <button type="button" class="filter-dropdown__trigger" aria-expanded="false" aria-haspopup="listbox" id="filter-dd-book">
+                        <span class="filter-dropdown__value">{{ filter_book_label }}</span>
+                        <svg class="filter-dropdown__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="filter-dropdown__panel" role="listbox" aria-labelledby="filter-dd-book" hidden>
+                        <a href="{% merge_query request book='' %}" class="filter-dropdown__option {% if not active_book %}is-selected{% endif %}" role="option" data-value="all">All</a>
+                        {% for book in books %}
+                        <a href="{% merge_query request book=book.slug %}" class="filter-dropdown__option {% if active_book == book.slug %}is-selected{% endif %}" role="option">{{ book.title }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-dropdown" data-filter-dropdown>
+                <div class="filter-dropdown__label">Filter by topic</div>
+                <div class="filter-dropdown__wrap">
+                    <button type="button" class="filter-dropdown__trigger" aria-expanded="false" aria-haspopup="listbox" id="filter-dd-topic">
+                        <span class="filter-dropdown__value">{{ filter_tag_label }}</span>
+                        <svg class="filter-dropdown__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="filter-dropdown__panel" role="listbox" aria-labelledby="filter-dd-topic" hidden>
+                        <a href="{% merge_query request tag='' %}" class="filter-dropdown__option {% if not active_tag %}is-selected{% endif %}" role="option">All</a>
+                        {% for tag in tags %}
+                        <a href="{% merge_query request tag=tag.slug %}" class="filter-dropdown__option {% if active_tag == tag.slug %}is-selected{% endif %}" role="option">{{ tag.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="filter-dropdown" data-filter-dropdown>
+                <div class="filter-dropdown__label">Filter by guest</div>
+                <div class="filter-dropdown__wrap">
+                    <button type="button" class="filter-dropdown__trigger" aria-expanded="false" aria-haspopup="listbox" id="filter-dd-guest">
+                        <span class="filter-dropdown__value">{{ filter_guest_label }}</span>
+                        <svg class="filter-dropdown__chevron" width="10" height="6" viewBox="0 0 10 6" fill="none" aria-hidden="true">
+                            <path d="M1 1L5 5L9 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                    </button>
+                    <div class="filter-dropdown__panel" role="listbox" aria-labelledby="filter-dd-guest" hidden>
+                        <a href="{% merge_query request guest='' %}" class="filter-dropdown__option {% if not active_guest %}is-selected{% endif %}" role="option">All</a>
+                        {% for guest in guests %}
+                        <a href="{% merge_query request guest=guest.slug %}" class="filter-dropdown__option {% if active_guest == guest.slug %}is-selected{% endif %}" role="option">{{ guest.name }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
             </div>
         </div>
-        
-        <div class="filter-group">
-            <h3>Filter by Book/Source</h3>
-            <div class="filter-pills">
-                <a href="?" class="pill {% if not active_book %}active{% endif %}">All</a>
-                {% for book in books %}
-                <a href="?book={{ book.slug }}{% if active_author %}&author={{ active_author }}{% endif %}" 
-                   class="pill {% if active_book == book.slug %}active{% endif %}">
-                    {{ book.title }}
-                </a>
-                {% endfor %}
-            </div>
+
+        {% if has_active_filters %}
+        <div class="library-filters__summary" aria-live="polite">
+            <span class="library-filters__summary-text">{{ filter_summary_parts|join:" · " }}</span>
+            <a href="{% merge_query request book='' tag='' guest='' %}" class="library-filters__clear">Clear</a>
         </div>
+        {% endif %}
     </div>
     
     <div class="posts-list">
@@ -47,9 +84,11 @@
             <div class="post-meta">
                 <span class="post-date">{{ post.publish_date|date:"d M Y"|upper }}</span>
                 <span class="post-separator">·</span>
-                <span class="post-author">{{ post.author.name }}</span>
-                <span class="post-separator">×</span>
-                <span class="post-book">{{ post.book.title }}</span>
+                {% if post.book.source_type == 'podcast' %}
+                <span class="post-attrib-line">{{ post.book.title }} × {% for g in post.guests.all %}{{ g.name }}{% if not forloop.last %}, {% endif %}{% empty %}—{% endfor %}</span>
+                {% else %}
+                <span class="post-attrib-line">{% if post.author %}{{ post.author.name }} × {% endif %}{{ post.book.title }}</span>
+                {% endif %}
             </div>
         </article>
         {% empty %}
@@ -59,3 +98,71 @@
 </div>
 {% endblock %}
 
+{% block extra_js %}
+<script>
+(function () {
+  document.querySelectorAll('[data-filter-dropdown]').forEach(function (root) {
+    var trigger = root.querySelector('.filter-dropdown__trigger');
+    var panel = root.querySelector('.filter-dropdown__panel');
+    if (!trigger || !panel) return;
+
+    function close() {
+      panel.hidden = true;
+      trigger.setAttribute('aria-expanded', 'false');
+      root.classList.remove('is-open');
+    }
+    function toggle() {
+      var open = panel.hidden;
+      document.querySelectorAll('[data-filter-dropdown].is-open').forEach(function (other) {
+        if (other !== root) {
+          var p = other.querySelector('.filter-dropdown__panel');
+          var t = other.querySelector('.filter-dropdown__trigger');
+          if (p) p.hidden = true;
+          if (t) t.setAttribute('aria-expanded', 'false');
+          other.classList.remove('is-open');
+        }
+      });
+      panel.hidden = !open;
+      trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      root.classList.toggle('is-open', open);
+    }
+
+    trigger.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggle();
+    });
+
+    panel.querySelectorAll('a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        close();
+      });
+    });
+  });
+
+  document.addEventListener('mousedown', function (e) {
+    if (!e.target.closest('[data-filter-dropdown]')) {
+      document.querySelectorAll('[data-filter-dropdown].is-open').forEach(function (root) {
+        var panel = root.querySelector('.filter-dropdown__panel');
+        var trigger = root.querySelector('.filter-dropdown__trigger');
+        if (panel) panel.hidden = true;
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        root.classList.remove('is-open');
+      });
+    }
+  });
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      document.querySelectorAll('[data-filter-dropdown].is-open').forEach(function (root) {
+        var panel = root.querySelector('.filter-dropdown__panel');
+        var trigger = root.querySelector('.filter-dropdown__trigger');
+        if (panel) panel.hidden = true;
+        if (trigger) trigger.setAttribute('aria-expanded', 'false');
+        root.classList.remove('is-open');
+      });
+    }
+  });
+})();
+</script>
+{% endblock %}
